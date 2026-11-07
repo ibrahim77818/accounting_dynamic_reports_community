@@ -3513,7 +3513,7 @@ class ks_dynamic_financial_base(models.Model):
                     l.id AS lid,
                     l.date AS ldate,
                     j.code AS lcode,
-                    a.name AS account_name,
+                    {self._ks_name_sql('a')} AS account_name,
                     m.name AS move_name,
                     m.id AS move_id,
                     l.name AS lname,
@@ -3983,9 +3983,10 @@ class ks_dynamic_financial_base(models.Model):
                                 m.id AS move_id,
                                 l.date AS date,
                                 l.date_maturity AS date_maturity, 
-                                j.name AS journal_name,
+                                %s AS journal_name,
                                 cc.id AS company_currency_id,
-                                a.name AS account_name, """
+                                %s AS account_name, """ % (self._ks_name_sql('j', 'account.journal'),
+                                                          self._ks_name_sql('a'))
 
             for ks_period in ks_period_dict:
                 if ks_period_dict[ks_period].get('start') and ks_period_dict[ks_period].get('stop'):
@@ -4065,7 +4066,7 @@ class ks_dynamic_financial_base(models.Model):
                         AND l.date <= '%s'
                         AND l.company_id in %s
                     GROUP BY
-                       l.date, l.date_maturity, m.id, m.name, j.name, a.name, cc.id) AS range_data
+                       l.date, l.date_maturity, m.id, m.name, journal_name, account_name, cc.id) AS range_data
                     WHERE range_0!=0 OR range_1!=0 OR range_2!=0 OR range_3!=0 OR range_4 !=0 OR range_5 !=0 OR range_6!=0
                 """ % (
                 WHERE, ks_type, ks_partner, ks_as_on_date, str(tuple(ks_company_ids) + tuple([0])))
@@ -4168,6 +4169,8 @@ class ks_dynamic_financial_base(models.Model):
             ks_df_informations["ks_filter_context"], strict_range=True)._ks_query_get()
         # 2.Fetch data from DB
         select = select % (ks_tables, ks_where_clause)
+        select = select.replace('j.name as journal_name', '%s as journal_name' % self._ks_name_sql('j', 'account.journal'))
+        select = select.replace('account.name as account_name', '%s as account_name' % self._ks_name_sql('account'))
         self.env.cr.execute(select, ks_where_params)
         return self.env.cr.dictfetchall()
 
@@ -5530,6 +5533,15 @@ class ks_dynamic_financial_base(models.Model):
         query = aml._where_calc(ks_domain)
         aml._apply_ir_rules(query)
         return query.get_sql()
+
+    def _ks_name_sql(self, alias, model='account.account'):
+        """SQL expression for a ``name`` column, translated when the field is
+        translatable (account, journal and tax names are JSONB from Odoo 17)."""
+        field = self.env[model]._fields['name']
+        if not field.translate:
+            return '%s.name' % alias
+        lang = (self.env.lang or 'en_US').replace("'", '')
+        return "COALESCE(%s.name->>'%s', %s.name->>'en_US')" % (alias, lang, alias)
 
     def ks_fetch_analytic_account_tag(self, ks_df_informations, ks_eariler_informations):
         ks_df_informations['analytic_tags'] = ks_eariler_informations and ks_eariler_informations.get(

@@ -2,8 +2,8 @@
 <templates xml:space="preserve">
     <t t-name="accounting_dynamic_reports_community.ks_control_panel" owl="1">
         <div class="dfr-control-pannel">
-            <ControlPanel display="{'top-right': false}">
-                <t t-set-slot="control-panel-bottom-left">
+            <ControlPanel>
+                <t t-set-slot="layout-actions">
                     <KsReportFilters action="props.action" ks_df_report_opt="props.ks_df_report_opt"
                                      ks_df_informations="props.ks_df_informations"
                                      new_ks_df_reports_ids="props.new_ks_df_reports_ids"
@@ -13,7 +13,7 @@
                                      ksSetReportInfo.bind="props.ksSetReportInfo"
                                      date_from_cmp="props.date_from_cmp" date_to_cmp="props.date_to_cmp"/>
                 </t>
-                <t t-set-slot="control-panel-bottom-right">
+                <t t-set-slot="control-panel-always-buttons">
                     <div class="btn-group ks_dfr_actions" role="group">
                         <button type="button" class="btn btn-primary" t-on-click="OnPrintPdf" title="Print PDF">
                             <i class="fa fa-file-pdf-o me-1"/>PDF

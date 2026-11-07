@@ -1,6 +1,6 @@
 /** @odoo-module **/
 
-import { Component, useSubEnv } from "@odoo/owl";
+import { Component } from "@odoo/owl";
 import { useService } from "@web/core/utils/hooks";
 import { ControlPanel } from "@web/search/control_panel/control_panel";
 import { Dropdown } from "@web/core/dropdown/dropdown";
@@ -34,13 +34,6 @@ export class KsControlPanel extends Component {
     static components = { ControlPanel, DropdownItem, Dropdown, KsReportFilters }
 
     setup() {
-        // Odoo 16's ControlPanel reads env.config.viewSwitcherEntries, which
-        // client actions do not provide.
-        useSubEnv({
-            config: Object.assign({}, this.env.config, {
-                viewSwitcherEntries: (this.env.config && this.env.config.viewSwitcherEntries) || [],
-            }),
-        });
         this.orm = useService("orm");
         this.action = useService("action");
         this.notificationService = useService("notification");

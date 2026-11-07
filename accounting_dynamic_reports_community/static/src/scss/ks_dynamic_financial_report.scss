@@ -779,19 +779,9 @@ $ks-navy-soft: #e8eef6;
 $ks-neg: #c0392b;
 
 .dfr-control-pannel {
-    .o_cp_bottom {
+    .o_control_panel_actions {
         flex-wrap: wrap;
-        gap: 6px;
-    }
-
-    .o_cp_bottom_left {
-        flex: 1 1 auto;
-        min-width: 0;
-    }
-
-    .o_cp_bottom_right {
-        flex: 0 0 auto;
-        width: auto;
+        row-gap: 4px;
     }
 
     .filters-main-bar {
