@@ -1,14 +1,11 @@
 /** @odoo-module **/
 
-import { session } from "@web/session";
+import { getCurrency as webGetCurrency } from "@web/core/currency";
 
-/**
- * Odoo 16 keeps currencies in the session (no @web/core/currency module).
- * Returns {symbol, position, digits} or undefined.
- */
+/** Returns {symbol, position, digits} or undefined. */
 export function getCurrency(currencyId) {
     const id = Array.isArray(currencyId) ? currencyId[0] : currencyId;
-    return (session.currencies || {})[id];
+    return webGetCurrency(id);
 }
 
 /** CSS class used to colour an amount the same way in the web view, PDF and Excel. */

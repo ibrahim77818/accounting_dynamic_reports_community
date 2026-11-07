@@ -44,8 +44,8 @@ def _jsonable(value):
 class TestDynamicReports(AccountTestInvoicingCommon):
 
     @classmethod
-    def setUpClass(cls, chart_template_ref=None):
-        super().setUpClass(chart_template_ref=chart_template_ref)
+    def setUpClass(cls):
+        super().setUpClass()
         today = fields.Date.today()
         cls.year_start = today.replace(month=1, day=1)
         cls.inv_1 = cls.init_invoice('out_invoice', invoice_date=cls.year_start, post=True, amounts=[1000.0])
@@ -191,7 +191,7 @@ class TestDynamicReports(AccountTestInvoicingCommon):
             self.env.ref('accounting_dynamic_reports_community.ks_df_pnl0').with_user(portal).read(['ks_name'])
 
     def test_14_multi_company_isolation(self):
-        company_2 = self.company_data_2['company']
+        company_2 = self.setup_other_company()['company']
         self.init_invoice('out_invoice', invoice_date=self.year_start, post=True, amounts=[9999.0],
                           company=company_2)
         info = self._posted_only('ks_df_tb0')

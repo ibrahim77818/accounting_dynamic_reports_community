@@ -2,34 +2,30 @@
 <templates xml:space="preserve">
     <t t-name="ks_searchview_differentiate_filter" owl="1">
         <t t-set="ksDiff" t-value="props.ks_df_informations['ks_differ']"/>
-        <Dropdown togglerClass="'btn btn-secondary ks_filter_btn'" showCaret="true">
-            <t t-set-slot="toggler">
+        <Dropdown>
+<button type="button" t-att-class="'btn btn-secondary ks_filter_btn dropdown-toggle'">
                 <i class="fa fa-bar-chart me-1"/>Compare:
                 <t t-if="!props.ks_df_informations['ks_diff_filter']['ks_diff_filter_enablity']">None</t>
                 <t t-elif="ksDiff['ks_differentiate_filter'] == 'custom'"><t t-esc="ksDiff['ks_start_date']"/> → <t t-esc="ksDiff['ks_end_date']"/></t>
                 <t t-else=""><t t-esc="ksDiff['string'] or 'Previous periods'"/></t>
-            </t>
-            <DropdownItem class="{'selected': !props.ks_df_informations['ks_diff_filter']['ks_diff_filter_enablity']}"
-                          onSelected="() => this.OnChangeComp('no_differentiation')">No Comparison</DropdownItem>
+            </button>
+<t t-set-slot="content">
+            <DropdownItem class="{'selected': !props.ks_df_informations['ks_diff_filter']['ks_diff_filter_enablity']}" onSelected="() =&gt; this.OnChangeComp('no_differentiation')">No Comparison</DropdownItem>
             <div role="separator" class="dropdown-divider"/>
             <div class="px-3 py-2 ks_custom_dates">
                 <label class="form-label small mb-0" for="ks_periods_number">Previous periods</label>
-                <input id="ks_periods_number" type="number" name="periods_number" class="form-control form-control-sm"
-                       min="1" max="30" t-att-value="state.previous_period || 1"
-                       t-on-change="(ev) => this.previousPeriodChange(ev.target.value)"/>
-                <button type="button" class="btn btn-sm btn-primary mt-2 w-100" t-on-click="() => this.OnChangeComp('earlier_interval')">Apply</button>
+                <input id="ks_periods_number" type="number" name="periods_number" class="form-control form-control-sm" min="1" max="30" t-att-value="state.previous_period || 1" t-on-change="(ev) =&gt; this.previousPeriodChange(ev.target.value)"/>
+                <button type="button" class="btn btn-sm btn-primary mt-2 w-100" t-on-click="() =&gt; this.OnChangeComp('earlier_interval')">Apply</button>
             </div>
             <div role="separator" class="dropdown-divider"/>
             <div class="px-3 py-2 ks_custom_dates">
                 <div class="fw-bold mb-1">Custom period</div>
                 <label class="form-label small mb-0">Start Date</label>
-                <input type="date" class="form-control form-control-sm mb-2" t-att-value="ksIso(state.start_date_diff)"
-                       t-on-change="(ev) => this.fdate_from_cmp(ksParse(ev.target.value))"/>
+                <input type="date" class="form-control form-control-sm mb-2" t-att-value="ksIso(state.start_date_diff)" t-on-change="(ev) =&gt; this.fdate_from_cmp(ksParse(ev.target.value))"/>
                 <label class="form-label small mb-0">End Date</label>
-                <input type="date" class="form-control form-control-sm" t-att-value="ksIso(state.end_date_diff)"
-                       t-on-change="(ev) => this.fdate_to_cmp(ksParse(ev.target.value))"/>
-                <button type="button" class="btn btn-sm btn-primary mt-2 w-100" t-on-click="() => this.OnChangeComp('custom')">Apply</button>
+                <input type="date" class="form-control form-control-sm" t-att-value="ksIso(state.end_date_diff)" t-on-change="(ev) =&gt; this.fdate_to_cmp(ksParse(ev.target.value))"/>
+                <button type="button" class="btn btn-sm btn-primary mt-2 w-100" t-on-click="() =&gt; this.OnChangeComp('custom')">Apply</button>
             </div>
-        </Dropdown>
+        </t></Dropdown>
     </t>
 </templates>

@@ -3,6 +3,15 @@ import ast
 from odoo import api, models
 
 
+def ks_query_parts(query):
+    """(FROM, WHERE, params) of a Query: ``get_sql()`` was removed in Odoo 18,
+    the clauses are ``SQL`` objects since then."""
+    if hasattr(query, 'get_sql'):
+        return query.get_sql()
+    from_clause, where_clause = query.from_clause, query.where_clause
+    return from_clause.code, where_clause.code, list(from_clause.params) + list(where_clause.params)
+
+
 class KsAccountMoveLine(models.Model):
     _inherit = "account.move.line"
 
@@ -68,4 +77,4 @@ class KsAccountMoveLine(models.Model):
 
         query = self._where_calc(domain)
         self._apply_ir_rules(query, 'read')
-        return query.get_sql()
+        return ks_query_parts(query)

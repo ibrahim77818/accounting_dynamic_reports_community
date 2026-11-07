@@ -2,41 +2,40 @@
 <templates xml:space="preserve">
     <t t-name="ks_searchview_date_filter" owl="1">
         <t t-set="ksDate" t-value="props.ks_df_informations['date']"/>
-        <Dropdown togglerClass="'btn btn-secondary ks_filter_btn'" showCaret="true">
-            <t t-set-slot="toggler">
+        <Dropdown>
+<button type="button" t-att-class="'btn btn-secondary ks_filter_btn dropdown-toggle'">
                 <i class="fa fa-calendar me-1"/>
                 <t t-if="ksDate['ks_filter'] != 'custom'"><t t-esc="ksDate['ks_string']"/></t>
                 <t t-elif="ksDate['ks_process'] == 'single'">As of <t t-esc="ksDate['ks_end_date']"/></t>
                 <t t-else=""><t t-esc="ksDate['ks_start_date']"/> → <t t-esc="ksDate['ks_end_date']"/></t>
-            </t>
+            </button>
+<t t-set-slot="content">
             <t t-if="ksDate['ks_process'] == 'single'">
-                <DropdownItem class="{'selected': ksDate.ks_filter == 'today'}" onSelected="() => this.updateFilter('today')">Today</DropdownItem>
-                <DropdownItem class="{'selected': ksDate.ks_filter == 'last_month'}" onSelected="() => this.updateFilter('last_month')">End of Last Month</DropdownItem>
-                <DropdownItem class="{'selected': ksDate.ks_filter == 'last_quarter'}" onSelected="() => this.updateFilter('last_quarter')">End of Last Quarter</DropdownItem>
-                <DropdownItem class="{'selected': ksDate.ks_filter == 'last_year'}" onSelected="() => this.updateFilter('last_year')">End of Last Financial Year</DropdownItem>
+                <DropdownItem class="{'selected': ksDate.ks_filter == 'today'}" onSelected="() =&gt; this.updateFilter('today')">Today</DropdownItem>
+                <DropdownItem class="{'selected': ksDate.ks_filter == 'last_month'}" onSelected="() =&gt; this.updateFilter('last_month')">End of Last Month</DropdownItem>
+                <DropdownItem class="{'selected': ksDate.ks_filter == 'last_quarter'}" onSelected="() =&gt; this.updateFilter('last_quarter')">End of Last Quarter</DropdownItem>
+                <DropdownItem class="{'selected': ksDate.ks_filter == 'last_year'}" onSelected="() =&gt; this.updateFilter('last_year')">End of Last Financial Year</DropdownItem>
             </t>
             <t t-else="">
-                <DropdownItem class="{'selected': ksDate.ks_filter == 'this_month'}" onSelected="() => this.updateFilter('this_month')">This Month</DropdownItem>
-                <DropdownItem class="{'selected': ksDate.ks_filter == 'this_quarter'}" onSelected="() => this.updateFilter('this_quarter')">This Quarter</DropdownItem>
-                <DropdownItem class="{'selected': ksDate.ks_filter == 'this_year'}" onSelected="() => this.updateFilter('this_year')">This Financial Year</DropdownItem>
+                <DropdownItem class="{'selected': ksDate.ks_filter == 'this_month'}" onSelected="() =&gt; this.updateFilter('this_month')">This Month</DropdownItem>
+                <DropdownItem class="{'selected': ksDate.ks_filter == 'this_quarter'}" onSelected="() =&gt; this.updateFilter('this_quarter')">This Quarter</DropdownItem>
+                <DropdownItem class="{'selected': ksDate.ks_filter == 'this_year'}" onSelected="() =&gt; this.updateFilter('this_year')">This Financial Year</DropdownItem>
                 <div role="separator" class="dropdown-divider"/>
-                <DropdownItem class="{'selected': ksDate.ks_filter == 'last_month'}" onSelected="() => this.updateFilter('last_month')">Last Month</DropdownItem>
-                <DropdownItem class="{'selected': ksDate.ks_filter == 'last_quarter'}" onSelected="() => this.updateFilter('last_quarter')">Last Quarter</DropdownItem>
-                <DropdownItem class="{'selected': ksDate.ks_filter == 'last_year'}" onSelected="() => this.updateFilter('last_year')">Last Financial Year</DropdownItem>
+                <DropdownItem class="{'selected': ksDate.ks_filter == 'last_month'}" onSelected="() =&gt; this.updateFilter('last_month')">Last Month</DropdownItem>
+                <DropdownItem class="{'selected': ksDate.ks_filter == 'last_quarter'}" onSelected="() =&gt; this.updateFilter('last_quarter')">Last Quarter</DropdownItem>
+                <DropdownItem class="{'selected': ksDate.ks_filter == 'last_year'}" onSelected="() =&gt; this.updateFilter('last_year')">Last Financial Year</DropdownItem>
             </t>
             <div role="separator" class="dropdown-divider"/>
             <div class="px-3 py-2 ks_custom_dates">
                 <div class="fw-bold mb-1">Custom</div>
                 <t t-if="props.ks_df_report_opt['ks_comparison_range'] or ksDate['ks_process'] == 'range'">
                     <label class="form-label small mb-0">Start Date</label>
-                    <input type="date" class="form-control form-control-sm mb-2" t-att-value="ksIso(state.start_date)"
-                           t-on-change="(ev) => this.onDateTimeChangedStartDate(ksParse(ev.target.value))"/>
+                    <input type="date" class="form-control form-control-sm mb-2" t-att-value="ksIso(state.start_date)" t-on-change="(ev) =&gt; this.onDateTimeChangedStartDate(ksParse(ev.target.value))"/>
                 </t>
                 <label class="form-label small mb-0">End Date</label>
-                <input type="date" class="form-control form-control-sm" t-att-value="ksIso(state.end_date)"
-                       t-on-change="(ev) => this.onDateTimeChanged(ksParse(ev.target.value))"/>
-                <button class="btn btn-sm btn-primary mt-2 w-100" t-on-click="() => this.updateFilter('custom')">Apply</button>
+                <input type="date" class="form-control form-control-sm" t-att-value="ksIso(state.end_date)" t-on-change="(ev) =&gt; this.onDateTimeChanged(ksParse(ev.target.value))"/>
+                <button class="btn btn-sm btn-primary mt-2 w-100" t-on-click="() =&gt; this.updateFilter('custom')">Apply</button>
             </div>
-        </Dropdown>
+        </t></Dropdown>
     </t>
 </templates>

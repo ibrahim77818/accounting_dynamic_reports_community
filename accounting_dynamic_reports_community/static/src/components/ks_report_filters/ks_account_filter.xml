@@ -2,17 +2,17 @@
 <templates xml:space="preserve">
     <t t-name="ks_searchview_account_filter" owl="1">
         <t t-set="ksAccTypes" t-value="props.ks_master_value.ks_df_informations.account_type || []"/>
-        <Dropdown togglerClass="'btn btn-secondary ks_filter_btn'" showCaret="true">
-            <t t-set-slot="toggler">
+        <Dropdown>
+<button type="button" t-att-class="'btn btn-secondary ks_filter_btn dropdown-toggle'">
                 <i class="fa fa-user me-1"/>Account:
-                <t t-esc="ksAccTypes.filter(a => a.selected).map(a => a.name).join(', ') || 'Both'"/>
-            </t>
+                <t t-esc="ksAccTypes.filter(a =&gt; a.selected).map(a =&gt; a.name).join(', ') || 'Both'"/>
+            </button>
+<t t-set-slot="content">
             <t t-foreach="ksAccTypes" t-as="a" t-key="a_index">
-                <DropdownItem class="{'selected': a.selected}" dataset="{ id: a.id }" parentClosingMode="'none'"
-                              onSelected="() => this.js_account_report_choice_filter(a.id, 'account_type')">
+                <DropdownItem class="{'selected': a.selected}" onSelected="() =&gt; this.js_account_report_choice_filter(a.id, 'account_type')" closingMode="'none'" attrs="{ 'data-id': a.id }">
                     <t t-esc="a.name"/>
                 </DropdownItem>
             </t>
-        </Dropdown>
+        </t></Dropdown>
     </t>
 </templates>

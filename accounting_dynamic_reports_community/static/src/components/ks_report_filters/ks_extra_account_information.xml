@@ -1,26 +1,24 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <templates xml:space="preserve">
     <t t-name="ks_searchview_extra_ks_account_information" owl="1">
-        <Dropdown togglerClass="'btn btn-secondary ks_filter_btn'" showCaret="true" menuClass="'ks_scroll_menu'">
-            <t t-set-slot="toggler">
+        <Dropdown menuClass="'ks_scroll_menu'">
+<button type="button" t-att-class="'btn btn-secondary ks_filter_btn dropdown-toggle'">
                 <i class="fa fa-list-ol me-1"/>Accounts:
-                <t t-set="selected_account" t-value="props.ks_df_informations['account'].filter(a => a.selected and a.code).map(a => a.code).join(', ')"/>
+                <t t-set="selected_account" t-value="props.ks_df_informations['account'].filter(a =&gt; a.selected and a.code).map(a =&gt; a.code).join(', ')"/>
                 <t t-esc="selected_account or 'All'"/>
-            </t>
+            </button>
+<t t-set-slot="content">
             <div class="px-2 pb-1">
-                <input type="text" placeholder="Search account..." class="form-control form-control-sm ks_input"
-                       t-on-keyup="onKsSearchFilter"/>
+                <input type="text" placeholder="Search account..." class="form-control form-control-sm ks_input" t-on-keyup="onKsSearchFilter"/>
             </div>
             <t t-foreach="props.ks_df_informations['account']" t-as="a" t-key="a_index">
                 <t t-if="a.id == 'divider'">
                     <h6 class="dropdown-header" t-esc="a.name"/>
                 </t>
-                <DropdownItem t-elif="a.id != 'group'" class="{'selected': a.selected, 'js_account_report_choice_filter': true}"
-                              dataset="{ id: a.id }" parentClosingMode="'none'"
-                              onSelected="() => this.js_account_report_choice_filter(a.id, 'account')">
+                <DropdownItem t-elif="a.id != 'group'" class="{'selected': a.selected, 'js_account_report_choice_filter': true}" onSelected="() =&gt; this.js_account_report_choice_filter(a.id, 'account')" closingMode="'none'" attrs="{ 'data-id': a.id }">
                     <span class="text-muted me-1" t-esc="a.code"/><t t-esc="a.name"/>
                 </DropdownItem>
             </t>
-        </Dropdown>
+        </t></Dropdown>
     </t>
 </templates>
