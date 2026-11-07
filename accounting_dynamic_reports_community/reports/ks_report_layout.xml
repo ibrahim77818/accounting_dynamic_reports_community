@@ -1,0 +1,135 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!--
+        Paper formats. The page header is rendered by wkhtmltopdf inside the top
+        margin. ``header_spacing`` (mm) reserves the header band and ``margin_top``
+        must be larger than it, otherwise the repeated table head of page 2+ is
+        drawn under the header. The header block below is kept at a fixed height
+        (see .ks-pdf-header in ks_pdf.scss) that always fits inside the band.
+    -->
+    <record id="ks_dfr_paperformat_portrait" model="report.paperformat">
+        <field name="name">Dynamic Reports A4 Portrait</field>
+        <field name="format">A4</field>
+        <field name="orientation">Portrait</field>
+        <field name="margin_top">32</field>
+        <field name="margin_bottom">18</field>
+        <field name="margin_left">10</field>
+        <field name="margin_right">10</field>
+        <field name="header_line" eval="False"/>
+        <field name="header_spacing">26</field>
+        <field name="dpi">96</field>
+    </record>
+
+    <record id="ks_dfr_paperformat_landscape" model="report.paperformat">
+        <field name="name">Dynamic Reports A4 Landscape</field>
+        <field name="format">A4</field>
+        <field name="orientation">Landscape</field>
+        <field name="margin_top">32</field>
+        <field name="margin_bottom">18</field>
+        <field name="margin_left">8</field>
+        <field name="margin_right">8</field>
+        <field name="header_line" eval="False"/>
+        <field name="header_spacing">26</field>
+        <field name="dpi">96</field>
+    </record>
+
+    <!-- Monetary amount, coloured by sign. Expects: value, currency, [strong] -->
+    <template id="ks_dfr_amount">
+        <t t-set="ks_val" t-value="value if isinstance(value, (int, float)) else 0.0"/>
+        <t t-if="currency.is_zero(ks_val)">
+            <span class="ks-zero">-</span>
+        </t>
+        <t t-else="">
+            <span t-att-class="'ks-amount ' + ('ks-neg' if ks_val &lt; 0 else 'ks-pos')"
+                  t-esc="ks_val" t-options="{'widget': 'monetary', 'display_currency': currency}"/>
+        </t>
+    </template>
+
+    <!-- Filter summary shown under the header on the first page -->
+    <template id="ks_dfr_filters">
+        <t t-set="opt" t-value="js_data['ks_df_informations']"/>
+        <t t-set="date" t-value="opt.get('date') or {}"/>
+        <table class="ks-pdf-filters">
+            <tr>
+                <td t-if="date.get('ks_process') == 'range'">
+                    <div class="ks-f-label">Period</div>
+                    <div class="ks-f-value"><t t-esc="ks_fmt_date(date.get('ks_start_date'))"/> &#8594; <t t-esc="ks_fmt_date(date.get('ks_end_date'))"/></div>
+                </td>
+                <td t-else="">
+                    <div class="ks-f-label">As of</div>
+                    <div class="ks-f-value" t-esc="ks_fmt_date(date.get('ks_end_date'))"/>
+                </td>
+                <td t-if="(opt.get('ks_diff_filter') or {}).get('ks_diff_filter_enablity') and (opt.get('ks_differ') or {}).get('ks_intervals')">
+                    <div class="ks-f-label">Comparison</div>
+                    <div class="ks-f-value" t-esc="', '.join(i.get('ks_string', '') for i in opt['ks_differ']['ks_intervals'])"/>
+                </td>
+                <td t-if="opt.get('journals') is not None and show_journals">
+                    <div class="ks-f-label">Journals</div>
+                    <div class="ks-f-value" t-esc="', '.join(j.get('code') or j.get('name') or '' for j in opt['journals'] if j.get('selected') and j.get('code')) or 'All'"/>
+                </td>
+                <td t-if="opt.get('account') is not None and show_accounts">
+                    <div class="ks-f-label">Accounts</div>
+                    <div class="ks-f-value" t-esc="', '.join(a.get('code') or a.get('name') or '' for a in opt['account'] if a.get('selected') and a.get('code')) or 'All'"/>
+                </td>
+                <td t-if="show_partners">
+                    <div class="ks-f-label">Partners</div>
+                    <div class="ks-f-value" t-esc="', '.join(n or '' for n in (opt.get('ks_selected_partner_name') or [])) or 'All'"/>
+                </td>
+                <td t-if="opt.get('selected_analytic_account_names')">
+                    <div class="ks-f-label">Analytic</div>
+                    <div class="ks-f-value" t-esc="', '.join(n or '' for n in opt['selected_analytic_account_names'])"/>
+                </td>
+                <td>
+                    <div class="ks-f-label">Entries</div>
+                    <div class="ks-f-value">
+                        <t t-if="opt.get('ks_posted_entries') and not opt.get('ks_unposted_entries')">Posted</t>
+                        <t t-elif="opt.get('ks_unposted_entries') and not opt.get('ks_posted_entries')">Draft</t>
+                        <t t-else="">Posted &amp; Draft</t>
+                    </div>
+                </td>
+            </tr>
+        </table>
+    </template>
+
+    <!--
+        Main layout. Call with: js_data, ks_title, [show_journals, show_accounts, show_partners]
+        Body is passed as the default slot (t-out="0").
+    -->
+    <template id="ks_dfr_layout">
+        <t t-call="web.html_container">
+            <t t-set="ks_opt" t-value="js_data['ks_df_informations']"/>
+            <div class="header ks-pdf-header-band">
+                <table class="ks-pdf-header">
+                    <tr>
+                        <td class="ks-h-left">
+                            <img t-if="company.logo" t-att-src="image_data_uri(company.logo)" class="ks-h-logo" alt="Logo"/>
+                            <div class="ks-h-company" t-esc="company.name"/>
+                        </td>
+                        <td class="ks-h-center">
+                            <div class="ks-h-title" t-esc="ks_title"/>
+                            <div class="ks-h-sub">
+                                <t t-set="hd" t-value="ks_opt.get('date') or {}"/>
+                                <t t-if="hd.get('ks_process') == 'range'"><t t-esc="ks_fmt_date(hd.get('ks_start_date'))"/> &#8212; <t t-esc="ks_fmt_date(hd.get('ks_end_date'))"/></t>
+                                <t t-else="">As of <t t-esc="ks_fmt_date(hd.get('ks_end_date'))"/></t>
+                                <t t-if="currency"> &#183; <t t-esc="currency.name"/></t>
+                            </div>
+                        </td>
+                        <td class="ks-h-right">
+                            <div>Printed <t t-esc="ks_printed_on"/></div>
+                            <div>Page <span class="page"/> / <span class="topage"/></div>
+                        </td>
+                    </tr>
+                </table>
+            </div>
+            <div class="article ks-pdf">
+                <t t-call="accounting_dynamic_reports_community.ks_dfr_filters"/>
+                <t t-out="0"/>
+                <div class="ks-pdf-end">End of report</div>
+            </div>
+            <div class="footer ks-pdf-footer">
+                <span t-esc="company.name"/> &#183; <span t-esc="ks_title"/>
+                <span class="ks-foot-right">Page <span class="page"/> of <span class="topage"/></span>
+            </div>
+        </t>
+    </template>
+</odoo>

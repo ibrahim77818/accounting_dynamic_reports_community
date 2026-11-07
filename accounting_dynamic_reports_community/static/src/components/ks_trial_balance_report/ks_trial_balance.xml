@@ -1,0 +1,205 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates>
+    <t t-name="accounting_dynamic_reports_community.ks_df_tb_action" owl="1">
+        <div class="container-fluid  mt-4 dfr-table-container">
+            <t t-set="account_data" t-value="props.ks_report_lines"/>
+            <t t-set="retained" t-value="props.ks_retained"/>
+            <t t-set="subtotal" t-value="props.ks_subtotal"/>
+            <t t-set="ks_df_new_start_report_opt" t-value="props.ks_df_informations.date.ks_start_date"/>
+            <t t-set="ks_df_new_end_report_opt" t-value="props.ks_df_informations.date.ks_end_date"/>
+            <div class="row justify-content-center">
+                <div class="col-md-12">
+                    <div class="card trial-ui">
+                        <div class="card-body table-responsive height-set">
+                            <table id="data-bs-lines" class="table border table-condensed dfr-main-table trial-balance mb-0" cellspacing="0" width="100%">
+                                <thead>
+                                    <tr>
+                                        <th colspan="1"></th>
+                                        <th colspan="1"></th>
+                                        <th class="ks_in_bal text-center" colspan="3">
+                                            <span>Initial Balance</span>
+                                        </th>
+                                        <th class="ks_to_dates text-center" colspan="3">
+                                            <span>
+                                                <t t-esc="ks_df_new_start_report_opt"/>
+                                                to
+                                                <t t-esc="ks_df_new_end_report_opt"/>
+                                            </span>
+                                        </th>
+                                        <th class="ks_Ending_Bal text-center" colspan="3">
+                                            <span>Ending Balance</span>
+                                        </th>
+                                    </tr>
+                                    <tr>
+                                        <th></th>
+                                        <th class="ks_color_th_1">Account</th>
+                                        <th class=" ks_color_th_2">Debit</th>
+                                        <th class=" ks_color_th_2">Credit</th>
+                                        <th class=" ks_color_th_2">Balance</th>
+                                        <th class=" ks_color_th_3">Debit</th>
+                                        <th class=" ks_color_th_3">Credit</th>
+                                        <th class=" ks_color_th_3">Balance</th>
+                                        <th class=" ks_color_th_4">Debit</th>
+                                        <th class=" ks_color_th_4">Credit</th>
+                                        <th class=" ks_color_th_4">Balance</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <t t-foreach="account_data" t-as="account" t-key="account">
+                                        <tr class="" data-bs-toggle="collapse"
+                                            t-attf-data-bs-id=".a{{account_data[account]['id']}}">
+                                            <td class="bld ks_color_td_1">
+                                                <div class="dropdown custom-dd">
+                                                    <button class="btn btn-secondary" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                                            <img src="/accounting_dynamic_reports_community/static/src/img/Vector.svg" alt="dropdown"
+                                                                     loading="lazy"/>
+                                                    </button>
+                                                    <ul class="dropdown-menu" role="menu">
+                                                        <t t-if="account_data[account]['id']">
+                                                            <li role="presentation">
+                                                                <a role="menuitem" class="ks_view-source dropdown-item" tabindex="-1"
+                                                                   action="ks_show_df_journal_items"
+                                                                   t-on-click="event => props.ksgetaction(event, props.ks_df_report_opt)"
+                                                                   t-att-data-bs-account-id="account_data[account]['id']">
+                                                                    Journal Items
+                                                                </a>
+                                                            </li>
+                                                            <li role="presentation">
+                                                                <a role="menuitem" class="ks_view-source dropdown-item" tabindex="1"
+                                                                   action="ks_show_df_general_ledger"
+                                                                   t-on-click="event => props.ksgetaction(event, props.ks_df_report_opt)"
+                                                                   t-att-data-bs-account-id="account_data[account]['id']">
+                                                                    General Ledger
+                                                                </a>
+                                                            </li>
+                                                        </t>
+                                                    </ul>
+                                                </div>
+                                            </td>
+                                            <td class="bld ks_color_td_1" t-att-data-bs-account-id="account_data[account]['id']">
+                                                <span t-att-data-bs-account-id="account_data[account]['id']">
+                                                    <span t-att-class="ksCls(account_data[account]['code'])" t-esc="ksFmt(account_data[account]['code'])"/>
+                                                    -
+                                                    <t t-esc="account_data[account]['name']"/>
+                                                </span>
+                                            </td>
+                                            <td class="ks_amt ks_color_td_2">
+                                                <span t-att-class="ksCls(account_data[account]['initial_debit'])" t-esc="ksFmt(account_data[account]['initial_debit'])"/>
+                                            </td>
+                                            <td class="ks_amt ks_color_td_2">
+                                                <span t-att-class="ksCls(account_data[account]['initial_credit'])" t-esc="ksFmt(account_data[account]['initial_credit'])"/>
+                                            </td>
+                                            <td class="ks_amt bld ks_color_td_2">
+                                                <span t-att-class="ksCls(account_data[account]['initial_balance'])" t-esc="ksFmt(account_data[account]['initial_balance'])"/>
+                                            </td>
+                                            <td class="ks_amt ks_color_td_3">
+                                                <span t-att-class="ksCls(account_data[account]['debit'])" t-esc="ksFmt(account_data[account]['debit'])"/>
+                                            </td>
+                                            <td class="ks_amt ks_color_td_3">
+                                                <span t-att-class="ksCls(account_data[account]['credit'])" t-esc="ksFmt(account_data[account]['credit'])"/>
+                                            </td>
+                                            <td class="ks_amt bld ks_color_td_3">
+                                                <span t-att-class="ksCls(account_data[account]['balance'])" t-esc="ksFmt(account_data[account]['balance'])"/>
+                                            </td>
+                                            <td class="ks_amt ks_color_td_4">
+                                                <span t-att-class="ksCls(account_data[account]['ending_debit'])" t-esc="ksFmt(account_data[account]['ending_debit'])"/>
+                                            </td>
+                                            <td class="ks_amt ks_color_td_4">
+                                                <span t-att-class="ksCls(account_data[account]['ending_credit'])" t-esc="ksFmt(account_data[account]['ending_credit'])"/>
+                                            </td>
+                                            <td class="ks_amt bld ks_color_td_4">
+                                                <span t-att-class="ksCls(account_data[account]['ending_balance'])" t-esc="ksFmt(account_data[account]['ending_balance'])"/>
+                                            </td>
+                                        </tr>
+                                    </t>
+                                    <t t-foreach="subtotal" t-as="account" t-key="account">
+                                        <tr class="ks_py-mline" data-bs-toggle="collapse"
+                                            t-attf-data-bs-id=".a{{subtotal[account]['id']}}"
+                                            t-on-click="event => this.ksGetMoveLines(event)">
+                                            <td class="ks_amt"></td>
+                                            <td class="bld">
+                                                <t t-esc="subtotal[account]['name']"/>
+                                            </td>
+                                            <td class="ks_amt">
+                                                <t t-if="subtotal[account]['initial_debit']">
+                                                    <span t-att-class="ksCls(subtotal[account]['initial_debit'])" t-esc="ksFmt(subtotal[account]['initial_debit'])"/>
+                                                </t>
+                                                <t t-else="">
+                                                    <p>0.0</p>
+                                                </t>
+                                            </td>
+                                            <td class="ks_amt">
+                                                <t t-if="subtotal[account]['initial_credit']">
+                                                    <span t-att-class="ksCls(subtotal[account]['initial_credit'])" t-esc="ksFmt(subtotal[account]['initial_credit'])"/>
+                                                </t>
+                                                <t t-else="">
+                                                    <p>0.0</p>
+                                                </t>
+                                            </td>
+                                            <td class="ks_amt bld">
+                                                <t t-if="subtotal[account]['initial_balance']">
+                                                    <span t-att-class="ksCls(subtotal[account]['initial_balance'])" t-esc="ksFmt(subtotal[account]['initial_balance'])"/>
+                                                </t>
+                                                <t t-else="">
+                                                    <p>0.0</p>
+                                                </t>
+                                            </td>
+                                            <td class="ks_amt">
+                                                <t t-if="subtotal[account]['debit']">
+                                                    <span t-att-class="ksCls(subtotal[account]['debit'])" t-esc="ksFmt(subtotal[account]['debit'])"/>
+                                                </t>
+                                                <t t-else="">
+                                                    <p>0.0</p>
+                                                </t>
+                                            </td>
+                                            <td class="ks_amt">
+                                                <t t-if="subtotal[account]['credit']">
+                                                    <span t-att-class="ksCls(subtotal[account]['credit'])" t-esc="ksFmt(subtotal[account]['credit'])"/>
+                                                </t>
+                                                <t t-else="">
+                                                    <p>0.0</p>
+                                                </t>
+                                            </td>
+                                            <td class="ks_amt bld">
+                                                <t t-if="subtotal[account]['balance']">
+                                                    <span t-att-class="ksCls(subtotal[account]['balance'])" t-esc="ksFmt(subtotal[account]['balance'])"/>
+                                                </t>
+                                                <t t-else="">
+                                                    <p>0.0</p>
+                                                </t>
+                                            </td>
+                                            <td class="ks_amt">
+                                                <t t-if="subtotal[account]['ending_debit']">
+                                                    <span t-att-class="ksCls(subtotal[account]['ending_debit'])" t-esc="ksFmt(subtotal[account]['ending_debit'])"/>
+                                                </t>
+                                                <t t-else="">
+                                                    <p>0.0</p>
+                                                </t>
+                                            </td>
+                                            <td class="ks_amt">
+                                                <t t-if="subtotal[account]['ending_credit']">
+                                                    <span t-att-class="ksCls(subtotal[account]['ending_credit'])" t-esc="ksFmt(subtotal[account]['ending_credit'])"/>
+                                                </t>
+                                                <t t-else="">
+                                                    <p>0.0</p>
+                                                </t>
+                                            </td>
+                                            <td class="ks_amt bld">
+                                                <t t-if="subtotal[account]['ending_balance']">
+                                                    <span t-att-class="ksCls(subtotal[account]['ending_balance'])" t-esc="ksFmt(subtotal[account]['ending_balance'])"/>
+                                                </t>
+                                                <t t-else="">
+                                                    <p>0.0</p>
+                                                </t>
+                                            </td>
+                                        </tr>
+                                    </t>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </t>
+</templates>

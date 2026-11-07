@@ -1,0 +1,227 @@
+<!-- Odoo Apps description page for accounting_dynamic_reports_community (Odoo 16.0). Inline styles only: apps.odoo.com strips <style> and <script> blocks. -->
+<section style="max-width:1120px;margin:0 auto;padding:0 16px;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,'Helvetica Neue',Arial,sans-serif;color:#2b2b33;">
+
+<!-- ============================== HERO ============================== -->
+<div style="background:linear-gradient(120deg,#017E84 0%,#3d6b78 45%,#714B67 100%);border-radius:18px;padding:48px 40px 40px;color:#ffffff;margin-top:12px;">
+  <div style="font-size:13px;letter-spacing:2px;text-transform:uppercase;opacity:.85;margin-bottom:10px;">Accounting &middot; Reporting &middot; Community</div>
+  <h1 style="font-size:40px;line-height:1.15;font-weight:700;margin:0 0 14px;color:#ffffff;">Dynamic Financial Reports</h1>
+  <p style="font-size:19px;line-height:1.55;max-width:760px;margin:0 0 24px;color:#ffffff;opacity:.95;">Eleven interactive accounting reports for Odoo 16 Community: Balance Sheet, Profit and Loss, Cash Flow, Executive Summary, ledgers, Trial Balance, aged balances, journals and tax. Filter, compare periods and drill down on screen, then export a colour-coded PDF or Excel file in one click.</p>
+  <div>
+    <span style="display:inline-block;border:1px solid rgba(255,255,255,.7);border-radius:20px;padding:6px 14px;margin:0 8px 8px 0;font-size:14px;">Odoo 16.0</span>
+    <span style="display:inline-block;border:1px solid rgba(255,255,255,.7);border-radius:20px;padding:6px 14px;margin:0 8px 8px 0;font-size:14px;">Community &amp; Enterprise</span>
+    <span style="display:inline-block;border:1px solid rgba(255,255,255,.7);border-radius:20px;padding:6px 14px;margin:0 8px 8px 0;font-size:14px;">18 automated tests</span>
+    <span style="display:inline-block;border:1px solid rgba(255,255,255,.7);border-radius:20px;padding:6px 14px;margin:0 8px 8px 0;font-size:14px;word-break:break-all;">Technical name: accounting_dynamic_reports_community</span>
+    <span style="display:inline-block;border:1px solid rgba(255,255,255,.7);border-radius:20px;padding:6px 14px;margin:0 8px 8px 0;font-size:14px;">LGPL-3</span>
+  </div>
+</div>
+
+<!-- ============================== KEY NUMBERS ============================== -->
+<div style="display:flex;flex-wrap:wrap;margin:28px -8px 8px;">
+  <div style="flex:1 1 220px;margin:8px;background:#f6f4f6;border-radius:14px;padding:20px 22px;"><div style="font-size:30px;font-weight:700;color:#714B67;">11 reports</div><div style="font-size:15px;color:#555;">Statements, ledgers, aged balances, journals and tax</div></div>
+  <div style="flex:1 1 220px;margin:8px;background:#eef6f6;border-radius:14px;padding:20px 22px;"><div style="font-size:30px;font-weight:700;color:#017E84;">3 outputs</div><div style="font-size:15px;color:#555;">Browser, PDF and Excel, with the same colours</div></div>
+  <div style="flex:1 1 220px;margin:8px;background:#f6f4f6;border-radius:14px;padding:20px 22px;"><div style="font-size:30px;font-weight:700;color:#714B67;">6 filters</div><div style="font-size:15px;color:#555;">Dates, comparison, journals, accounts, analytic, partners</div></div>
+  <div style="flex:1 1 220px;margin:8px;background:#eef6f6;border-radius:14px;padding:20px 22px;"><div style="font-size:30px;font-weight:700;color:#017E84;">1 dependency</div><div style="font-size:15px;color:#555;">Only <code style="word-break:break-all;">account</code>: no Enterprise apps needed</div></div>
+</div>
+
+<!-- ============================== WHY ============================== -->
+<h2 style="font-size:28px;font-weight:700;margin:40px 0 6px;color:#2b2b33;">Why this module</h2>
+<p style="font-size:16px;color:#555;margin:0 0 18px;">Odoo 16 Community posts every journal entry correctly but gives you almost no way to read them back as financial statements.</p>
+<div style="display:flex;flex-wrap:wrap;margin:0 -10px;">
+  <div style="flex:1 1 440px;margin:10px;border:1px solid #f1d6d6;background:#fff8f8;border-radius:14px;padding:24px 26px;">
+    <h3 style="font-size:19px;font-weight:700;color:#b33939;margin:0 0 12px;">In standard Odoo 16 Community</h3>
+    <ul style="font-size:15px;line-height:1.65;margin:0;padding-left:20px;color:#3a3a42;">
+      <li><b>No Balance Sheet, Profit and Loss or Cash Flow</b> report: those are Enterprise only.</li>
+      <li>No <b>General Ledger, Trial Balance or Partner Ledger</b>: you group journal items by hand.</li>
+      <li>No <b>Aged Receivable / Payable</b> with ageing buckets.</li>
+      <li>No <b>period comparison</b> side by side.</li>
+      <li>Exports are flat lists, with <b>no formatted PDF</b> for management or auditors.</li>
+      <li>Negative balances look exactly like positive ones.</li>
+    </ul>
+  </div>
+  <div style="flex:1 1 440px;margin:10px;border:1px solid #cfe7e7;background:#f4fbfb;border-radius:14px;padding:24px 26px;">
+    <h3 style="font-size:19px;font-weight:700;color:#017E84;margin:0 0 12px;">With this module</h3>
+    <ul style="font-size:15px;line-height:1.65;margin:0;padding-left:20px;color:#3a3a42;">
+      <li><b>Balance Sheet, Profit and Loss, Cash Flow Statement</b> and an <b>Executive Summary</b>, on top of Community.</li>
+      <li><b>General Ledger, Trial Balance, Partner Ledger</b> and <b>Consolidated Journals</b>, with drill-down to <b>Journal Items</b>.</li>
+      <li><b>Aged Receivable</b> and <b>Aged Payable</b> in seven buckets, per partner and per invoice.</li>
+      <li><b>Compare</b> with any number of previous periods or a custom period.</li>
+      <li>One-click <b>PDF</b> (modern layout, header and column heads never overlap) and <b>Excel</b>.</li>
+      <li><b>Colour coding everywhere</b>: negatives in red, zeros as a grey dash, totals on a navy band.</li>
+    </ul>
+  </div>
+</div>
+
+<!-- ============================== HOW IT WORKS ============================== -->
+<h2 style="font-size:28px;font-weight:700;margin:40px 0 6px;color:#2b2b33;">How it works</h2>
+<p style="font-size:16px;color:#555;margin:0 0 18px;">Nothing to configure: install it and open a report.</p>
+<div style="display:flex;flex-wrap:wrap;margin:0 -8px;">
+  <div style="flex:1 1 200px;margin:8px;border-radius:12px;border:1px solid #e3dde2;padding:18px;"><div style="width:34px;height:34px;border-radius:50%;background:#714B67;color:#fff;font-weight:700;text-align:center;line-height:34px;margin-bottom:10px;">1</div><div style="font-weight:700;margin-bottom:4px;">Open</div><div style="font-size:14px;color:#555;">Go to <b>Invoicing &rsaquo; Reporting &rsaquo; Dynamic Reports</b> and pick a report.</div></div>
+  <div style="flex:1 1 200px;margin:8px;border-radius:12px;border:1px solid #e3dde2;padding:18px;"><div style="width:34px;height:34px;border-radius:50%;background:#714B67;color:#fff;font-weight:700;text-align:center;line-height:34px;margin-bottom:10px;">2</div><div style="font-weight:700;margin-bottom:4px;">Filter</div><div style="font-size:14px;color:#555;">Choose the date or period, comparison, journals, accounts, analytic accounts or partners.</div></div>
+  <div style="flex:1 1 200px;margin:8px;border-radius:12px;border:1px solid #e3dde2;padding:18px;"><div style="width:34px;height:34px;border-radius:50%;background:#714B67;color:#fff;font-weight:700;text-align:center;line-height:34px;margin-bottom:10px;">3</div><div style="font-weight:700;margin-bottom:4px;">Explore</div><div style="font-size:14px;color:#555;">Expand sections and accounts, and jump to the journal items behind any figure.</div></div>
+  <div style="flex:1 1 200px;margin:8px;border-radius:12px;border:1px solid #cfe7e7;background:#f4fbfb;padding:18px;"><div style="width:34px;height:34px;border-radius:50%;background:#017E84;color:#fff;font-weight:700;text-align:center;line-height:34px;margin-bottom:10px;">4</div><div style="font-weight:700;margin-bottom:4px;">Export</div><div style="font-size:14px;color:#555;">Click <b>PDF</b> or <b>Excel</b>, or the envelope to e-mail the PDF to yourself.</div></div>
+</div>
+
+<!-- ============================== FEATURES ============================== -->
+<h2 style="font-size:28px;font-weight:700;margin:40px 0 6px;color:#2b2b33;">Features</h2>
+<p style="font-size:16px;color:#555;margin:0 0 4px;">Screenshots use a demo company with two years of activity: about 70 customer invoices, vendor bills and refunds, full and partial payments, draft entries, two analytic projects and a misc. reversal entry.</p>
+
+<div style="margin:44px 0 0;">
+  <div style="font-size:13px;font-weight:700;color:#017E84;letter-spacing:1px;text-transform:uppercase;">Menus</div>
+  <h3 style="font-size:23px;font-weight:700;margin:4px 0 8px;">All reports in one place</h3>
+  <p style="font-size:15px;line-height:1.6;color:#555;margin:0 0 14px;">A new <b>Dynamic Reports</b> section under <b>Invoicing &rsaquo; Reporting</b> (or <b>Accounting &rsaquo; Reporting</b>) lists the 11 reports. It is visible to <b>Billing</b> users and to the <b>Read-only</b> accounting role, so it works in a plain Community database.</p>
+  <img src="adr_01_menu.png" alt="Reporting menu with the Dynamic Reports section and its 11 reports" style="width:100%;border:1px solid #e1e1e6;border-radius:10px;box-shadow:0 6px 24px rgba(30,30,60,.10);"/>
+</div>
+
+<div style="margin:44px 0 0;">
+  <div style="font-size:13px;font-weight:700;color:#017E84;letter-spacing:1px;text-transform:uppercase;">Feature 1</div>
+  <h3 style="font-size:23px;font-weight:700;margin:4px 0 8px;">Balance Sheet that always balances</h3>
+  <p style="font-size:15px;line-height:1.6;color:#555;margin:0 0 14px;"><b>ASSETS</b>, <b>LIABILITIES</b> and <b>EQUITY</b> broken down into Odoo&rsquo;s account types, with <b>Current Year Earnings</b> computed automatically. Click a section to expand it down to each account; the <b>EQUITY + LIABILITIES</b> line sits on a navy band so you can check it against total assets at a glance.</p>
+  <img src="adr_02_balance_sheet.png" alt="Balance Sheet expanded to accounts, with debit, credit and balance columns" style="width:100%;border:1px solid #e1e1e6;border-radius:10px;box-shadow:0 6px 24px rgba(30,30,60,.10);"/>
+</div>
+
+<div style="margin:44px 0 0;">
+  <div style="font-size:13px;font-weight:700;color:#017E84;letter-spacing:1px;text-transform:uppercase;">Feature 2</div>
+  <h3 style="font-size:23px;font-weight:700;margin:4px 0 8px;">Profit and Loss with period comparison</h3>
+  <p style="font-size:15px;line-height:1.6;color:#555;margin:0 0 14px;"><b>Gross Profit</b>, <b>Total Income</b>, <b>Expense</b> and <b>Net Profit</b>, each down to the account. Open <b>Compare</b> and set <b>Previous periods</b> (here 2), or a custom start and end date, to get one column per period next to the current one.</p>
+  <img src="adr_03_pnl_compare.png" alt="Profit and Loss compared with two previous periods" style="width:100%;border:1px solid #e1e1e6;border-radius:10px;box-shadow:0 6px 24px rgba(30,30,60,.10);"/>
+  <div style="background:#f4fbfb;border-left:4px solid #017E84;border-radius:8px;padding:16px 20px;font-size:15px;line-height:1.6;margin-top:18px;"><b>Rule:</b> Net Profit = Total Income &minus; Expense, for every column. In the screenshot, $&nbsp;232,937.00 &minus; $&nbsp;105,606.60 = <b>$&nbsp;127,330.40</b> for the first comparison period.</div>
+</div>
+
+<div style="margin:44px 0 0;">
+  <div style="font-size:13px;font-weight:700;color:#017E84;letter-spacing:1px;text-transform:uppercase;">Feature 3</div>
+  <h3 style="font-size:23px;font-weight:700;margin:4px 0 8px;">Cash Flow Statement and Executive Summary</h3>
+  <p style="font-size:15px;line-height:1.6;color:#555;margin:0 0 14px;">The <b>Cash Flow Statement</b> shows cash at the beginning of the period, the net increase and the closing balance. The <b>Executive Summary</b> groups key figures by <b>Cash</b>, <b>Balance Sheet</b>, <b>Profitability</b>, <b>Position</b> and <b>Performance</b> (margins, return on investments, average debtor and creditor days).</p>
+  <img src="adr_04_cash_flow.png" alt="Cash Flow Statement" style="width:100%;border:1px solid #e1e1e6;border-radius:10px;box-shadow:0 6px 24px rgba(30,30,60,.10);margin-bottom:22px;"/>
+  <img src="adr_05_executive_summary.png" alt="Executive Summary grouped by Cash, Balance Sheet, Profitability, Position and Performance" style="width:100%;border:1px solid #e1e1e6;border-radius:10px;box-shadow:0 6px 24px rgba(30,30,60,.10);"/>
+</div>
+
+<div style="margin:44px 0 0;">
+  <div style="font-size:13px;font-weight:700;color:#017E84;letter-spacing:1px;text-transform:uppercase;">Feature 4</div>
+  <h3 style="font-size:23px;font-weight:700;margin:4px 0 8px;">General Ledger down to every journal item</h3>
+  <p style="font-size:15px;line-height:1.6;color:#555;margin:0 0 14px;">One line per account with debit, credit and balance. Click an account to load its journal items (date, journal, partner, entry, label, running balance). The <b>&#8942;</b> menu on a line opens the <b>Move Line</b> in Odoo. Large accounts load in pages with <b>Load More</b>.</p>
+  <img src="adr_06_general_ledger.png" alt="General Ledger summary by account" style="width:100%;border:1px solid #e1e1e6;border-radius:10px;box-shadow:0 6px 24px rgba(30,30,60,.10);margin-bottom:22px;"/>
+  <img src="adr_07_gl_lines.png" alt="General Ledger account expanded to its journal items with running balance" style="width:100%;border:1px solid #e1e1e6;border-radius:10px;box-shadow:0 6px 24px rgba(30,30,60,.10);"/>
+</div>
+
+<div style="margin:44px 0 0;">
+  <div style="font-size:13px;font-weight:700;color:#017E84;letter-spacing:1px;text-transform:uppercase;">Feature 5</div>
+  <h3 style="font-size:23px;font-weight:700;margin:4px 0 8px;">Trial Balance with initial, period and ending balances</h3>
+  <p style="font-size:15px;line-height:1.6;color:#555;margin:0 0 14px;">Debit, credit and balance for the <b>Initial Balance</b>, the selected period and the <b>Ending Balance</b>, with a total row. From any account, the <b>&#8942;</b> menu opens its <b>Journal Items</b> or its <b>General Ledger</b>.</p>
+  <img src="adr_08_trial_balance.png" alt="Trial Balance with initial, period and ending columns" style="width:100%;border:1px solid #e1e1e6;border-radius:10px;box-shadow:0 6px 24px rgba(30,30,60,.10);"/>
+</div>
+
+<div style="margin:44px 0 0;">
+  <div style="font-size:13px;font-weight:700;color:#017E84;letter-spacing:1px;text-transform:uppercase;">Feature 6</div>
+  <h3 style="font-size:23px;font-weight:700;margin:4px 0 8px;">Partner Ledger and Aged Receivable / Payable</h3>
+  <p style="font-size:15px;line-height:1.6;color:#555;margin:0 0 14px;">The <b>Partner Ledger</b> shows each customer and vendor with debit, credit and balance; filter on <b>Receivable</b> or <b>Payable</b>, and on reconciled or unreconciled entries. <b>Aged Receivable</b> and <b>Aged Payable</b> spread open amounts over <b>Not Due</b>, <b>1&ndash;30</b>, <b>31&ndash;60</b>, <b>61&ndash;90</b>, <b>91&ndash;120</b>, <b>121&ndash;180</b> and <b>180+</b> days, per partner and per invoice.</p>
+  <img src="adr_09_partner_ledger.png" alt="Partner Ledger with debit, credit and balance per partner" style="width:100%;border:1px solid #e1e1e6;border-radius:10px;box-shadow:0 6px 24px rgba(30,30,60,.10);margin-bottom:22px;"/>
+  <img src="adr_10_aged_receivable.png" alt="Aged Receivable with seven ageing buckets per partner" style="width:100%;border:1px solid #e1e1e6;border-radius:10px;box-shadow:0 6px 24px rgba(30,30,60,.10);"/>
+</div>
+
+<div style="margin:44px 0 0;">
+  <div style="font-size:13px;font-weight:700;color:#017E84;letter-spacing:1px;text-transform:uppercase;">Feature 7</div>
+  <h3 style="font-size:23px;font-weight:700;margin:4px 0 8px;">Tax Report and Consolidated Journals</h3>
+  <p style="font-size:15px;line-height:1.6;color:#555;margin:0 0 14px;">The <b>Tax Report</b> lists the net amount and tax for every sales and purchase tax, and can be compared over several periods. <b>Consolidated Journals</b> gives debit, credit and balance per journal, then per account inside each journal.</p>
+  <img src="adr_11_tax_report.png" alt="Tax Report with net amount and tax for sales and purchases" style="width:100%;border:1px solid #e1e1e6;border-radius:10px;box-shadow:0 6px 24px rgba(30,30,60,.10);margin-bottom:22px;"/>
+  <img src="adr_12_journals.png" alt="Consolidated Journals with totals per journal" style="width:100%;border:1px solid #e1e1e6;border-radius:10px;box-shadow:0 6px 24px rgba(30,30,60,.10);"/>
+</div>
+
+<div style="margin:44px 0 0;">
+  <div style="font-size:13px;font-weight:700;color:#017E84;letter-spacing:1px;text-transform:uppercase;">Feature 8</div>
+  <h3 style="font-size:23px;font-weight:700;margin:4px 0 8px;">Filters that stay on screen</h3>
+  <p style="font-size:15px;line-height:1.6;color:#555;margin:0 0 14px;">Every filter is a button in the control panel that shows its current value. Dates: <b>Today</b>, <b>End of Last Month / Quarter / Financial Year</b>, or <b>This / Last Month, Quarter, Financial Year</b> for period reports, plus a <b>Custom</b> date. <b>Journals</b> (single journals or journal groups), <b>Accounts</b> with a search box, <b>Analytic</b> and <b>Partners</b> with type-ahead search. <b>Options</b> switches between <b>Posted</b> and <b>Draft</b> entries, a date range, and <b>Print with details</b>.</p>
+  <img src="adr_13_date_filter.png" alt="Date filter with presets and a custom date" style="width:100%;border:1px solid #e1e1e6;border-radius:10px;box-shadow:0 6px 24px rgba(30,30,60,.10);margin-bottom:22px;"/>
+  <img src="adr_14_journal_filter.png" alt="Journal filter listing every journal" style="width:100%;border:1px solid #e1e1e6;border-radius:10px;box-shadow:0 6px 24px rgba(30,30,60,.10);margin-bottom:22px;"/>
+  <img src="adr_15_partner_filter.png" alt="Partner filter with type-ahead search" style="width:100%;border:1px solid #e1e1e6;border-radius:10px;box-shadow:0 6px 24px rgba(30,30,60,.10);"/>
+</div>
+
+<div style="margin:44px 0 0;">
+  <div style="font-size:13px;font-weight:700;color:#017E84;letter-spacing:1px;text-transform:uppercase;">Feature 9</div>
+  <h3 style="font-size:23px;font-weight:700;margin:4px 0 8px;">Modern PDF that never overlaps</h3>
+  <p style="font-size:15px;line-height:1.6;color:#555;margin:0 0 14px;">Every PDF has the company logo and name, the report title and period, the print date and <b>Page X / Y</b>, then a summary of the active filters. The navy column header repeats on every page, under a header band of fixed height, so it is never drawn over the header or the rows. Statements print in portrait; ledgers, the Trial Balance and aged reports in landscape.</p>
+  <img src="adr_17_pdf_balance_sheet.png" alt="Balance Sheet PDF with company header, filter summary and coloured totals" style="width:100%;max-width:760px;border:1px solid #e1e1e6;border-radius:10px;box-shadow:0 6px 24px rgba(30,30,60,.10);margin-bottom:22px;"/>
+  <img src="adr_18_pdf_gl_page2.png" alt="General Ledger PDF page 2: the header and the repeated column header do not overlap" style="width:100%;border:1px solid #e1e1e6;border-radius:10px;box-shadow:0 6px 24px rgba(30,30,60,.10);"/>
+  <div style="font-size:13px;color:#777;margin:6px 0 22px;">Page 2 of a 13-page General Ledger: the page header, the repeated column header and the first row are cleanly separated.</div>
+  <img src="adr_19_pdf_aged_receivable.png" alt="Aged Receivable PDF with details per invoice" style="width:100%;border:1px solid #e1e1e6;border-radius:10px;box-shadow:0 6px 24px rgba(30,30,60,.10);"/>
+</div>
+
+<div style="margin:44px 0 0;">
+  <div style="font-size:13px;font-weight:700;color:#017E84;letter-spacing:1px;text-transform:uppercase;">Feature 10</div>
+  <h3 style="font-size:23px;font-weight:700;margin:4px 0 8px;">Excel ready to share</h3>
+  <p style="font-size:15px;line-height:1.6;color:#555;margin:0 0 14px;">The <b>Excel</b> button exports the report as it is filtered on screen: navy column headers, highlighted totals, thousands separators, negatives in red, and sheets already set to print on A4 landscape, one page wide.</p>
+  <img src="adr_20_excel_trial_balance.png" alt="Trial Balance exported to Excel with coloured headers and red negatives" style="width:100%;border:1px solid #e1e1e6;border-radius:10px;box-shadow:0 6px 24px rgba(30,30,60,.10);"/>
+</div>
+
+<div style="margin:44px 0 0;">
+  <div style="font-size:13px;font-weight:700;color:#017E84;letter-spacing:1px;text-transform:uppercase;">Feature 11</div>
+  <h3 style="font-size:23px;font-weight:700;margin:4px 0 8px;">Four settings, all optional</h3>
+  <p style="font-size:15px;line-height:1.6;color:#555;margin:0 0 14px;">In <b>Settings &rsaquo; Invoicing &rsaquo; Dynamic Financial Reports</b>: <b>Enable Ledger Initial Balance</b> (General and Partner Ledger), <b>Disable Trial Initial Balance</b> (moves income and expense initial balances to Current Year Earnings), <b>Disable Balance Sheet Sign</b> and <b>Enable Net Tax</b>. Account types used by the reports can be reviewed in <b>Configuration &rsaquo; Accounting &rsaquo; Account Type</b>.</p>
+  <img src="adr_16_settings.png" alt="Dynamic Financial Reports section in the Invoicing settings" style="width:100%;max-width:1000px;border:1px solid #e1e1e6;border-radius:10px;box-shadow:0 6px 24px rgba(30,30,60,.10);"/>
+</div>
+
+<!-- ============================== COLOUR RULES ============================== -->
+<h2 style="font-size:28px;font-weight:700;margin:44px 0 6px;color:#2b2b33;">One colour language, three outputs</h2>
+<p style="font-size:16px;color:#555;margin:0 0 18px;">The browser, the PDF and the Excel file use the same rules, so a figure reads the same wherever it is printed.</p>
+<div style="font-size:15px;line-height:1.6;">
+  <div style="margin-bottom:6px;"><span style="display:inline-block;min-width:150px;text-align:center;background:#fee2e2;color:#b91c1c;border-radius:10px;padding:1px 8px;font-size:13px;margin-right:10px;">-$ 9,944.87</span> Negative amount: red</div>
+  <div style="margin-bottom:6px;"><span style="display:inline-block;min-width:150px;text-align:center;background:#f3f4f6;color:#9ca3af;border-radius:10px;padding:1px 8px;font-size:13px;margin-right:10px;">-</span> Zero: a grey dash instead of 0.00</div>
+  <div style="margin-bottom:6px;"><span style="display:inline-block;min-width:150px;text-align:center;background:#dbeafe;color:#1d4ed8;border-radius:10px;padding:1px 8px;font-size:13px;margin-right:10px;">Section</span> Report sections and account groups: tinted row, bold</div>
+  <div style="margin-bottom:6px;"><span style="display:inline-block;min-width:150px;text-align:center;background:#1f3a5f;color:#ffffff;border-radius:10px;padding:1px 8px;font-size:13px;margin-right:10px;">Net Profit</span> Grand totals: navy band, positive in green, negative in light red</div>
+</div>
+<div style="background:#f4fbfb;border-left:4px solid #017E84;border-radius:8px;padding:16px 20px;font-size:15px;line-height:1.6;margin-top:14px;"><b>Amounts</b> keep your currency and its position (before or after the number) and use your language&rsquo;s thousands separator.</div>
+
+<!-- ============================== CORNER CASES ============================== -->
+<h2 style="font-size:28px;font-weight:700;margin:44px 0 6px;color:#2b2b33;">Built for real-world corner cases</h2>
+<p style="font-size:16px;color:#555;margin:0 0 18px;">Each of these is covered by the automated tests or by the filter matrix run before release.</p>
+<div style="display:flex;flex-wrap:wrap;margin:0 -8px;font-size:15px;line-height:1.55;">
+  <div style="flex:1 1 320px;margin:8px;padding:16px 18px;border:1px solid #e8e8ee;border-radius:12px;"><b>Several companies</b><br/><span style="color:#555;">Reports read only the companies selected in the company switcher; another company&rsquo;s entries never leak into the totals.</span></div>
+  <div style="flex:1 1 320px;margin:8px;padding:16px 18px;border:1px solid #e8e8ee;border-radius:12px;"><b>Draft entries</b><br/><span style="color:#555;">Show posted entries only, draft only, or both. Cancelled entries are always excluded.</span></div>
+  <div style="flex:1 1 320px;margin:8px;padding:16px 18px;border:1px solid #e8e8ee;border-radius:12px;"><b>Partial payments</b><br/><span style="color:#555;">Aged reports use the open residual of each invoice, so a half-paid invoice appears with its remaining amount only.</span></div>
+  <div style="flex:1 1 320px;margin:8px;padding:16px 18px;border:1px solid #e8e8ee;border-radius:12px;"><b>Refunds and reversals</b><br/><span style="color:#555;">Credit notes and reversal entries reduce the right accounts and show in red when a balance turns negative.</span></div>
+  <div style="flex:1 1 320px;margin:8px;padding:16px 18px;border:1px solid #e8e8ee;border-radius:12px;"><b>Comparison periods</b><br/><span style="color:#555;">Income and net profit are computed separately for every comparison column and checked against the journal items.</span></div>
+  <div style="flex:1 1 320px;margin:8px;padding:16px 18px;border:1px solid #e8e8ee;border-radius:12px;"><b>Long ledgers</b><br/><span style="color:#555;">Journal items load in pages on screen. In the PDF, rows never split across pages and the column header repeats on every page.</span></div>
+  <div style="flex:1 1 320px;margin:8px;padding:16px 18px;border:1px solid #e8e8ee;border-radius:12px;"><b>Analytic accounting</b><br/><span style="color:#555;">Filter on analytic accounts through Odoo 16&rsquo;s analytic distribution. The filter appears only for users with analytic accounting.</span></div>
+  <div style="flex:1 1 320px;margin:8px;padding:16px 18px;border:1px solid #e8e8ee;border-radius:12px;"><b>No chart of accounts yet</b><br/><span style="color:#555;">Installs on a fresh database without demo data and uninstalls cleanly, leaving no menus or tables behind.</span></div>
+  <div style="flex:1 1 320px;margin:8px;padding:16px 18px;border:1px solid #e8e8ee;border-radius:12px;"><b>Billing-only users</b><br/><span style="color:#555;">Works for users who only have the Invoicing rights, without &ldquo;Show Full Accounting Features&rdquo;.</span></div>
+</div>
+
+<!-- ============================== SECURITY ============================== -->
+<h2 style="font-size:28px;font-weight:700;margin:44px 0 6px;color:#2b2b33;">Security</h2>
+<p style="font-size:16px;color:#555;margin:0 0 18px;">Built on Odoo&rsquo;s accounting groups; journal items are always read through Odoo&rsquo;s record rules.</p>
+<table style="width:100%;border-collapse:collapse;font-size:15px;">
+  <thead><tr style="background:#714B67;color:#fff;"><th style="text-align:left;padding:10px 14px;">Who</th><th style="text-align:left;padding:10px 14px;">Sees and does</th></tr></thead>
+  <tbody>
+    <tr style="border-bottom:1px solid #eee;"><td style="padding:10px 14px;">Billing (<code style="word-break:break-all;">account.group_account_invoice</code>)</td><td style="padding:10px 14px;">Opens all reports, uses every filter, exports PDF and Excel</td></tr>
+    <tr style="border-bottom:1px solid #eee;background:#fafafa;"><td style="padding:10px 14px;">Read-only (<code style="word-break:break-all;">account.group_account_readonly</code>)</td><td style="padding:10px 14px;">Same as Billing</td></tr>
+    <tr style="border-bottom:1px solid #eee;"><td style="padding:10px 14px;">Billing Administrator (<code style="word-break:break-all;">account.group_account_manager</code>)</td><td style="padding:10px 14px;">Everything above, plus creating and deleting report definitions</td></tr>
+    <tr style="border-bottom:1px solid #eee;background:#fafafa;"><td style="padding:10px 14px;">Portal and other users</td><td style="padding:10px 14px;">No access to the reports or the menu</td></tr>
+    <tr style="border-bottom:1px solid #eee;"><td style="padding:10px 14px;">Multi-company</td><td style="padding:10px 14px;">Figures limited to the companies the user has selected and is allowed to see</td></tr>
+  </tbody>
+</table>
+
+<!-- ============================== TECHNICAL ============================== -->
+<h2 style="font-size:28px;font-weight:700;margin:44px 0 6px;color:#2b2b33;">Technical details</h2>
+<table style="width:100%;border-collapse:collapse;font-size:15px;margin-top:12px;">
+  <tbody>
+    <tr style="border-bottom:1px solid #eee;"><td style="padding:10px 14px;width:240px;color:#777;">Odoo version</td><td style="padding:10px 14px;">16.0, Community and Enterprise</td></tr>
+    <tr style="border-bottom:1px solid #eee;background:#fafafa;"><td style="padding:10px 14px;width:240px;color:#777;">Depends on</td><td style="padding:10px 14px;"><code style="word-break:break-all;">account</code></td></tr>
+    <tr style="border-bottom:1px solid #eee;"><td style="padding:10px 14px;width:240px;color:#777;">Python dependency</td><td style="padding:10px 14px;"><code style="word-break:break-all;">xlsxwriter</code> (shipped with Odoo)</td></tr>
+    <tr style="border-bottom:1px solid #eee;background:#fafafa;"><td style="padding:10px 14px;width:240px;color:#777;">PDF engine</td><td style="padding:10px 14px;">wkhtmltopdf 0.12.6 with patched Qt (the version recommended by Odoo and used on Odoo.sh)</td></tr>
+    <tr style="border-bottom:1px solid #eee;"><td style="padding:10px 14px;width:240px;color:#777;">Menus</td><td style="padding:10px 14px;">Invoicing &rsaquo; Reporting &rsaquo; Dynamic Reports (11 reports); Invoicing &rsaquo; Configuration &rsaquo; Accounting &rsaquo; Account Type</td></tr>
+    <tr style="border-bottom:1px solid #eee;background:#fafafa;"><td style="padding:10px 14px;width:240px;color:#777;">Settings</td><td style="padding:10px 14px;">Settings &rsaquo; Invoicing &rsaquo; Dynamic Financial Reports (4 options)</td></tr>
+    <tr style="border-bottom:1px solid #eee;"><td style="padding:10px 14px;width:240px;color:#777;">Models</td><td style="padding:10px 14px;"><code style="word-break:break-all;">ks.dynamic.financial.reports</code>, <code style="word-break:break-all;">ks.dynamic.financial.base</code>, <code style="word-break:break-all;">ks.dynamic.financial.reports.account</code>; PDF value models <code style="word-break:break-all;">report.accounting_dynamic_reports_community.*</code></td></tr>
+    <tr style="border-bottom:1px solid #eee;background:#fafafa;"><td style="padding:10px 14px;width:240px;color:#777;">Automated tests</td><td style="padding:10px 14px;">18 tests: every report computes; Trial Balance balances; Balance Sheet balances; no duplicated rows; P&amp;L, Executive Summary and comparison columns match the journal items; General Ledger and aged totals; draft filter; Excel and PDF for all reports; access rights; multi-company isolation; e-mail sending</td></tr>
+    <tr style="border-bottom:1px solid #eee;"><td style="padding:10px 14px;width:240px;color:#777;">License</td><td style="padding:10px 14px;">LGPL-3</td></tr>
+  </tbody>
+</table>
+
+<!-- ============================== CONTACT ============================== -->
+<div style="margin:52px 0 40px;background:linear-gradient(120deg,#714B67 0%,#017E84 100%);border-radius:18px;padding:36px 40px;color:#fff;">
+  <h2 style="font-size:26px;font-weight:700;margin:0 0 8px;color:#fff;">Support &amp; customization</h2>
+  <p style="font-size:16px;line-height:1.6;margin:0 0 20px;color:#fff;opacity:.95;">Questions, a demo, or an adaptation to your own process? Get in touch.</p>
+  <a href="mailto:ibrahim.yahiah@gmail.com" style="display:inline-block;background:#fff;color:#714B67;font-weight:700;text-decoration:none;border-radius:8px;padding:12px 22px;margin:0 12px 10px 0;">&#9993;&nbsp; ibrahim.yahiah@gmail.com</a>
+  <a href="https://www.linkedin.com/in/ibrahim-yahia" target="_blank" rel="noopener" style="display:inline-block;border:2px solid #fff;color:#fff;font-weight:700;text-decoration:none;border-radius:8px;padding:10px 22px;margin:0 0 10px 0;">LinkedIn: Ibrahim Yahia</a>
+  <p style="font-size:13px;margin:14px 0 0;opacity:.8;color:#fff;">Author: Ibrahim Yahia &middot; License: LGPL-3</p>
+</div>
+
+</section>

@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+    <t t-name="ks_searchview_account_filter" owl="1">
+        <t t-set="ksAccTypes" t-value="props.ks_master_value.ks_df_informations.account_type || []"/>
+        <Dropdown togglerClass="'btn btn-secondary ks_filter_btn'" showCaret="true">
+            <t t-set-slot="toggler">
+                <i class="fa fa-user me-1"/>Account:
+                <t t-esc="ksAccTypes.filter(a => a.selected).map(a => a.name).join(', ') || 'Both'"/>
+            </t>
+            <t t-foreach="ksAccTypes" t-as="a" t-key="a_index">
+                <DropdownItem class="{'selected': a.selected}" dataset="{ id: a.id }" parentClosingMode="'none'"
+                              onSelected="() => this.js_account_report_choice_filter(a.id, 'account_type')">
+                    <t t-esc="a.name"/>
+                </DropdownItem>
+            </t>
+        </Dropdown>
+    </t>
+</templates>

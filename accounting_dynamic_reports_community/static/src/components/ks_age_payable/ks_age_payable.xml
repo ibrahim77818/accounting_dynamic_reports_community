@@ -1,0 +1,189 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates>
+    <t t-name="accounting_dynamic_reports_community.ks_df_pay_action" owl="1">
+        <div class="container-fluid mt-4 dfr-table-container">
+            <div class="row justify-content-center">
+                <div class="col-md-12 col-lg-10">
+                    <div class="card">
+                        <div class="card-body table-responsive">
+                            <table id="data-bs-lines" class="table table-condensed dfr-main-table mb-0 ks-data-bs-table-age border" cellspacing="0" width="100%">
+                                <thead class="ks_thead">
+                                    <tr>
+                                        <th colspan="4">Partners</th>
+                                        <t t-foreach="props.ks_period_list" t-as="period" t-key="period">
+                                            <th class="">
+                                                <t t-esc="period"/>
+                                            </th>
+                                        </t>
+                                        <th class="">Total</th>
+                                        <th class=""/>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <t t-foreach="props.ks_partner_dict" t-as="partner" t-key="partner">
+                                        <t t-if="partner != 'Total'">
+                                            <t t-set="common_id" t-value=""/>
+                                            <tr class="ks-mline ks_pr-py-mline accordion-toggle collapsed" data-bs-toggle="collapse" t-att-data-bs-partner-id="partner" t-attf-data-bs-target=".a{{partner}}" t-on-click="(event) =&gt; this.ksShowLines(event,partner)">
+                                                <td colspan="4">
+                                                    <span>
+                                                        <span t-att-class="ksCls(props.ks_partner_dict[partner]['partner_name'])" t-esc="ksFmt(props.ks_partner_dict[partner]['partner_name'])"/>
+                                                    </span>
+                                                </td>
+                                                <t t-foreach="props.ks_period_list" t-as="period" t-key="period">
+                                                    <td class="ks_amt">
+                                                        <span t-att-class="ksCls(props.ks_partner_dict[partner][period + '_formatted'])" t-esc="ksFmt(props.ks_partner_dict[partner][period + '_formatted'])"/>
+                                                    </td>
+                                                </t>
+                                                <td class="ks_amt">
+                                                    <span t-att-class="ksCls(props.ks_partner_dict[partner]['total_formatted'])" t-esc="ksFmt(props.ks_partner_dict[partner]['total_formatted'])"/>
+                                                </td>
+                                                <t t-if="props.ks_partner_dict[partner]['lines'] and props.ks_partner_dict[partner]['lines'].length &gt; 0">
+                                                    <td class="toggle-arrow"/>
+                                                </t>
+                                                <t t-else="">
+                                                    <td/>
+                                                </t>
+                                                <t t-set="common_id" t-value="'a'+partner"/>
+                                            </tr>
+                                            <tr>
+                                                <td class="p-0 hiddenRow" colspan="13">
+                                                    <div class="collapse" t-attf-class="a{{partner}}">
+                                                        <t t-if="state.visible[partner] and state.visible[partner].isVisible and state.visible[partner].data.length &gt; 0">
+                                                            <t t-call="ks_df_sub_receivable0">
+                                                                <t t-set="account_data" t-value="state.visible[partner].data"/>
+                                                            </t>
+                                                            <t t-if="state.visible[partner].showLoadMore">
+                                                                <div class="d-flex justify-content-center align-items-center">
+                                                                    <button t-on-click="(event) =&gt; this.ksGetAgedLinesInfo(partner, true)" class="load_btn">
+                                                                        Load More ...
+                                                                    </button>
+                                                                </div>
+                                                            </t>
+                                                        </t>
+                                                    </div>
+                                                </td>
+                                            </tr>
+                                        </t>
+                                        <t t-else="">
+                                            <tr class="ks-total-line">
+                                                <td colspan="4">
+                                                    <span>Total</span>
+                                                </td>
+                                                <t t-foreach="props.ks_period_list" t-as="period" t-key="period">
+                                                    <td class="ks_amt">
+                                                        <span t-att-class="ksCls(props.ks_partner_dict[partner][period + '_formatted'])" t-esc="ksFmt(props.ks_partner_dict[partner][period + '_formatted'])"/>
+                                                    </td>
+                                                </t>
+                                                <td class="ks_amt">
+                                                    <span t-att-class="ksCls(props.ks_partner_dict[partner]['total_formatted'])" t-esc="ksFmt(props.ks_partner_dict[partner]['total_formatted'])"/>
+                                                </td>
+                                            </tr>
+                                        </t>
+                                    </t>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </t>
+    <t t-name="ks_df_sub_receivable0" owl="1">
+        <div class="ks_py-mline-table-div">
+            <t t-if="account_data.length &gt; 0">
+                <table class="table">
+                <thead class="ks_thead">
+                    <tr>
+                        <th/>
+                        <th>Entry Label</th>
+                        <th>Due Date</th>
+                        <th>Journal</th>
+                        <th>Account</th>
+                        <t t-foreach="props.ks_period_list" t-as="period" t-key="period_index">
+                            <th class="">
+                                <t t-esc="period"/>
+                            </th>
+                        </t>
+                        <th/>
+                    </tr>
+                </thead>
+                <tbody>
+                    <t t-foreach="account_data" t-as="account_line" t-key="account_line_index">
+                                <tr>
+                                    <td>
+                                        <div class="dropdown custom-dd">
+                                            <button class="btn btn-secondary" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                                <img src="/accounting_dynamic_reports_community/static/src/img/Vector.svg" alt="dropdown" loading="lazy"/>
+                                            </button>
+                                            <span t-att-data-bs-move-id="account_line.move_id"/>
+                                            <ul class="dropdown-menu" role="menu">
+                                                <li role="presentation">
+                                                    <a role="menuitem" class="ks_view-source dropdown-item" tabindex="-1" action="ks_df_show_move_line" t-att-data-bs-move-id="account_line.move_id" t-on-click="event =&gt; props.ksgetaction(event, props.ks_df_report_opt)">
+                                                        Move line
+                                                    </a>
+                                                </li>
+                                            </ul>
+                                        </div>
+                                    </td>
+                                    <t t-if="account_line.move_name">
+                                        <td>
+                                            <t t-esc="account_line.move_name"/>
+                                        </td>
+                                    </t>
+                                    <t t-else="">
+                                        <td>-</td>
+                                    </t>
+                                    <t t-if="account_line.date_maturity">
+                                        <td>
+                                            <t t-esc="account_line.date_maturity"/>
+                                        </td>
+                                    </t>
+                                    <t t-else="">
+                                        <td>-</td>
+                                    </t>
+                                    <t t-if="account_line.journal_name[ks_lang]">
+                                        <td>
+                                            <t t-esc="account_line.journal_name[ks_lang]"/>
+                                        </td>
+                                    </t>
+                                    <t t-else="">
+                                        <td>-</td>
+                                    </t>
+                                    <t t-if="account_line.account_name[ks_lang]">
+                                        <td>
+                                            <t t-esc="account_line.account_name[ks_lang]"/>
+                                        </td>
+                                    </t>
+                                    <t t-else="">
+                                        <td>-</td>
+                                    </t>
+                                    <td>
+                                        <span t-att-class="ksCls(account_line.range_0)" t-esc="ksFmt(account_line.range_0)"/>
+                                    </td>
+                                    <td>
+                                       <span t-att-class="ksCls(account_line.range_1)" t-esc="ksFmt(account_line.range_1)"/>
+                                    </td>
+                                    <td>
+                                        <span t-att-class="ksCls(account_line.range_2)" t-esc="ksFmt(account_line.range_2)"/>
+                                    </td>
+                                   <td>
+                                       <span t-att-class="ksCls(account_line.range_3)" t-esc="ksFmt(account_line.range_3)"/>
+                                   </td>
+                                    <td>
+                                        <span t-att-class="ksCls(account_line.range_4)" t-esc="ksFmt(account_line.range_4)"/>
+                                    </td>
+                                    <td>
+                                        <span t-att-class="ksCls(account_line.range_5)" t-esc="ksFmt(account_line.range_5)"/>
+                                    </td>
+                                    <td>
+                                        <span t-att-class="ksCls(account_line.range_6)" t-esc="ksFmt(account_line.range_6)"/>
+                                    </td>
+                                    <td class=""/>
+                                </tr>
+                            </t>
+                        </tbody>
+            </table>
+            </t>
+        </div>
+    </t>
+</templates>

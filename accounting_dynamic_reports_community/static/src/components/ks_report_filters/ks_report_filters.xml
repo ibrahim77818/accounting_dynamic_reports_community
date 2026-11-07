@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates>
+    <t t-name="accounting_dynamic_reports_community.ks_report_filters" owl="1">
+        <div class = "d-flex align-items-center justify-content-start justify-content-lg-around main-wrapper">
+            <div class="gap-1 d-flex filters-main-bar">
+                <t t-if="props.ks_df_informations['ks_intervals']">
+                    <t t-call="ks_searchview_date_filter"/>
+                </t>
+                <t t-if="props.ks_df_informations['ks_differentiation']">
+                    <t t-call="ks_searchview_differentiate_filter"/>
+                </t>
+                <t t-if="props.ks_df_informations['ks_journal_filter_visiblity']">
+                    <t t-call="ks_searchview_journals_filter"/>
+                </t>
+                <t t-if="props.ks_df_informations['ks_partner_filter']">
+                    <t t-call="ks_searchview_partner_filter"/>
+                </t>
+                <t t-if="props.ks_df_informations['ks_partner_account_type_filter']">
+                    <t t-call="ks_searchview_account_filter"/>
+                </t>
+                <t t-if="props.ks_df_informations['ks_analytic_account_visibility']">
+                    <t t-call="ks_searchview_analytic_filter"/>
+                </t>
+                <t t-if="props.ks_df_informations['ks_account_filter_visiblity']">
+                    <t t-call="ks_searchview_extra_ks_account_information"/>
+                </t>
+                <t t-call="ks_searchview_extra_ks_df_informations"/>
+            </div>
+        </div>
+    </t>
+</templates>

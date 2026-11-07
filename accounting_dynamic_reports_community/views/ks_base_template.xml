@@ -1,0 +1,505 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!--
+        PDF reports. Every template receives ``js_data`` (the payload returned by
+        ks_get_dynamic_fin_info, post-processed by the web client) and is wrapped
+        in accounting_dynamic_reports_community.ks_dfr_layout (header, filters, footer).
+        Colour rules (ks_pdf.scss): negative amounts red, positive key results
+        green, sections tinted, totals on a navy band.
+    -->
+
+    <!-- ===================== Balance Sheet / P&L / Cash Flow / custom ===================== -->
+    <template id="ks_pdf_statement">
+        <t t-set="ks_title" t-value="js_data.get('new_ks_df_reports_ids') or 'Financial Report'"/>
+        <t t-set="show_journals" t-value="True"/>
+        <t t-set="show_accounts" t-value="True"/>
+        <t t-call="accounting_dynamic_reports_community.ks_dfr_layout">
+            <t t-set="opt" t-value="js_data['ks_df_informations']"/>
+            <t t-set="ks_dc" t-value="(opt.get('ks_diff_filter') or {}).get('ks_debit_credit_visibility')"/>
+            <t t-set="ks_cmp" t-value="(opt.get('ks_diff_filter') or {}).get('ks_diff_filter_enablity') and (opt.get('ks_differ') or {}).get('ks_intervals')"/>
+            <t t-set="ks_cmp_keys" t-value="['comp_bal_' + i['ks_string'] for i in (opt.get('ks_differ') or {}).get('ks_intervals', [])] if ks_cmp else []"/>
+            <t t-set="ks_grand" t-value="['Net Profit', 'EQUITY + LIABILITIES', 'Cash and cash equivalents, closing balance']"/>
+            <table class="ks-pdf-table">
+                <thead>
+                    <tr>
+                        <th class="ks-col-name">Account</th>
+                        <t t-if="ks_dc">
+                            <th class="ks-col-amt">Debit</th>
+                            <th class="ks-col-amt">Credit</th>
+                        </t>
+                        <th class="ks-col-amt" t-esc="(opt.get('date') or {}).get('ks_string') if ks_cmp else 'Balance'"/>
+                        <t t-foreach="ks_cmp_keys" t-as="ck">
+                            <th class="ks-col-amt" t-esc="ck[len('comp_bal_'):]"/>
+                        </t>
+                    </tr>
+                </thead>
+                <tbody>
+                    <t t-foreach="js_data.get('ks_report_lines') or []" t-as="a">
+                        <t t-if="a.get('ks_level', 0) != 0">
+                            <t t-set="is_acc" t-value="a.get('ks_df_report_account_type') == 'account'"/>
+                            <t t-set="lvl" t-value="a.get('ks_level') or 1"/>
+                            <t t-set="row_cls" t-value="'ks-row-grand' if a.get('ks_name') in ks_grand else ('ks-row-account' if is_acc else ('ks-row-section' if lvl == 1 else 'ks-row-subtotal'))"/>
+                            <tr t-att-class="row_cls">
+                                <td class="ks-col-name" t-att-style="'padding-left: %spx;' % (6 + 13 * (lvl - 1))" t-esc="a.get('ks_name')"/>
+                                <t t-if="ks_dc">
+                                    <td class="ks-col-amt"><t t-call="accounting_dynamic_reports_community.ks_dfr_amount"><t t-set="value" t-value="a.get('debit')"/></t></td>
+                                    <td class="ks-col-amt"><t t-call="accounting_dynamic_reports_community.ks_dfr_amount"><t t-set="value" t-value="a.get('credit')"/></t></td>
+                                </t>
+                                <td class="ks-col-amt"><t t-call="accounting_dynamic_reports_community.ks_dfr_amount"><t t-set="value" t-value="a.get('balance')"/></t></td>
+                                <t t-foreach="ks_cmp_keys" t-as="ck">
+                                    <td class="ks-col-amt"><t t-call="accounting_dynamic_reports_community.ks_dfr_amount"><t t-set="value" t-value="(a.get('balance_cmp') or {}).get(ck)"/></t></td>
+                                </t>
+                            </tr>
+                        </t>
+                    </t>
+                </tbody>
+            </table>
+        </t>
+    </template>
+
+    <!-- ===================== Executive Summary ===================== -->
+    <template id="ks_pdf_executive">
+        <t t-set="ks_title" t-value="'Executive Summary'"/>
+        <t t-call="accounting_dynamic_reports_community.ks_dfr_layout">
+            <t t-set="opt" t-value="js_data['ks_df_informations']"/>
+            <t t-set="ks_dc" t-value="(opt.get('ks_diff_filter') or {}).get('ks_debit_credit_visibility')"/>
+            <t t-set="ks_keys" t-value="['comp_bal_' + (opt.get('date') or {}).get('ks_string', '')] + ['comp_bal_' + i['ks_string'] for i in (opt.get('ks_differ') or {}).get('ks_intervals', [])]"/>
+            <table class="ks-pdf-table">
+                <thead>
+                    <tr>
+                        <th class="ks-col-name">Indicator</th>
+                        <t t-if="ks_dc">
+                            <th class="ks-col-amt">Debit</th>
+                            <th class="ks-col-amt">Credit</th>
+                            <th class="ks-col-amt">Balance</th>
+                        </t>
+                        <t t-else="">
+                            <t t-foreach="ks_keys" t-as="k"><th class="ks-col-amt" t-esc="k[len('comp_bal_'):]"/></t>
+                        </t>
+                    </tr>
+                </thead>
+                <tbody>
+                    <t t-foreach="js_data.get('ks_report_lines') or []" t-as="a">
+                        <t t-set="lvl" t-value="a.get('ks_level') or 1"/>
+                        <tr t-att-class="'ks-row-section' if lvl == 1 else 'ks-row-account'">
+                            <td class="ks-col-name" t-att-style="'padding-left: %spx;' % (6 + 14 * (lvl - 1))" t-esc="a.get('ks_name')"/>
+                            <t t-set="cols" t-value="[ks_period_value(a.get('debit')), ks_period_value(a.get('credit')), ks_period_value(a.get('balance'))] if ks_dc else [ks_period_value(a.get('balance'), k) for k in ks_keys]"/>
+                            <t t-foreach="cols" t-as="v">
+                                <td class="ks-col-amt">
+                                    <t t-if="a.get('percentage')">
+                                        <span t-att-class="'ks-neg' if v &lt; 0 else 'ks-amount'" t-esc="'{:,.2f} %'.format(v or 0.0)"/>
+                                    </t>
+                                    <t t-else="">
+                                        <t t-call="accounting_dynamic_reports_community.ks_dfr_amount"><t t-set="value" t-value="v"/></t>
+                                    </t>
+                                </td>
+                            </t>
+                        </tr>
+                    </t>
+                </tbody>
+            </table>
+        </t>
+    </template>
+
+    <!-- ===================== Trial Balance ===================== -->
+    <template id="ks_pdf_trial_bal">
+        <t t-set="ks_title" t-value="'Trial Balance'"/>
+        <t t-set="show_journals" t-value="True"/>
+        <t t-set="show_accounts" t-value="True"/>
+        <t t-call="accounting_dynamic_reports_community.ks_dfr_layout">
+            <t t-set="lines" t-value="js_data.get('ks_report_lines') or {}"/>
+            <t t-set="subtotal" t-value="list((js_data.get('ks_subtotal') or {}).values())[:1]"/>
+            <table class="ks-pdf-table">
+                <thead>
+                    <tr>
+                        <th class="ks-col-code">Code</th>
+                        <th class="ks-col-name">Account</th>
+                        <th class="ks-col-amt">Initial Balance</th>
+                        <th class="ks-col-amt">Debit</th>
+                        <th class="ks-col-amt">Credit</th>
+                        <th class="ks-col-amt">Period Balance</th>
+                        <th class="ks-col-amt">Ending Balance</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <t t-foreach="sorted(lines.values(), key=lambda l: str(l.get('code') or ''))" t-as="l">
+                        <tr class="ks-row-account">
+                            <td class="ks-col-code" t-esc="l.get('code')"/>
+                            <td class="ks-col-name" t-esc="l.get('name')"/>
+                            <td class="ks-col-amt"><t t-call="accounting_dynamic_reports_community.ks_dfr_amount"><t t-set="value" t-value="l.get('initial_balance')"/></t></td>
+                            <td class="ks-col-amt"><t t-call="accounting_dynamic_reports_community.ks_dfr_amount"><t t-set="value" t-value="l.get('debit')"/></t></td>
+                            <td class="ks-col-amt"><t t-call="accounting_dynamic_reports_community.ks_dfr_amount"><t t-set="value" t-value="l.get('credit')"/></t></td>
+                            <td class="ks-col-amt"><t t-call="accounting_dynamic_reports_community.ks_dfr_amount"><t t-set="value" t-value="l.get('balance')"/></t></td>
+                            <td class="ks-col-amt ks-col-strong"><t t-call="accounting_dynamic_reports_community.ks_dfr_amount"><t t-set="value" t-value="l.get('ending_balance')"/></t></td>
+                        </tr>
+                    </t>
+                </tbody>
+                <tfoot t-if="subtotal">
+                    <t t-set="s" t-value="subtotal[0]"/>
+                    <tr class="ks-row-grand">
+                        <td class="ks-col-name" colspan="2">Total</td>
+                        <td class="ks-col-amt"><t t-call="accounting_dynamic_reports_community.ks_dfr_amount"><t t-set="value" t-value="s.get('initial_balance')"/></t></td>
+                        <td class="ks-col-amt"><t t-call="accounting_dynamic_reports_community.ks_dfr_amount"><t t-set="value" t-value="s.get('debit')"/></t></td>
+                        <td class="ks-col-amt"><t t-call="accounting_dynamic_reports_community.ks_dfr_amount"><t t-set="value" t-value="s.get('credit')"/></t></td>
+                        <td class="ks-col-amt"><t t-call="accounting_dynamic_reports_community.ks_dfr_amount"><t t-set="value" t-value="s.get('balance')"/></t></td>
+                        <td class="ks-col-amt"><t t-call="accounting_dynamic_reports_community.ks_dfr_amount"><t t-set="value" t-value="s.get('ending_balance')"/></t></td>
+                    </tr>
+                </tfoot>
+            </table>
+        </t>
+    </template>
+
+    <!-- ===================== General Ledger / Partner Ledger (shared body) ===================== -->
+    <template id="ks_dfr_ledger_body">
+        <!-- expects: groups (list of dicts with lines), detail (bool), third_col_label, third_col_key, group_code -->
+        <t t-if="not detail">
+            <table class="ks-pdf-table">
+                <thead>
+                    <tr>
+                        <th class="ks-col-name" t-esc="group_label"/>
+                        <th class="ks-col-amt">Initial Balance</th>
+                        <th class="ks-col-amt">Debit</th>
+                        <th class="ks-col-amt">Credit</th>
+                        <th class="ks-col-amt">Balance</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <t t-foreach="groups" t-as="g">
+                        <tr class="ks-row-account">
+                            <td class="ks-col-name"><t t-if="group_code and g.get('code')"><span class="ks-code" t-esc="g.get('code')"/> </t><t t-esc="g.get('name')"/></td>
+                            <td class="ks-col-amt"><t t-call="accounting_dynamic_reports_community.ks_dfr_amount"><t t-set="value" t-value="g.get('initial_balance')"/></t></td>
+                            <td class="ks-col-amt"><t t-call="accounting_dynamic_reports_community.ks_dfr_amount"><t t-set="value" t-value="g.get('debit')"/></t></td>
+                            <td class="ks-col-amt"><t t-call="accounting_dynamic_reports_community.ks_dfr_amount"><t t-set="value" t-value="g.get('credit')"/></t></td>
+                            <td class="ks-col-amt ks-col-strong"><t t-call="accounting_dynamic_reports_community.ks_dfr_amount"><t t-set="value" t-value="g.get('balance')"/></t></td>
+                        </tr>
+                    </t>
+                </tbody>
+                <tfoot>
+                    <tr class="ks-row-grand">
+                        <td class="ks-col-name">Total</td>
+                        <td class="ks-col-amt"><t t-call="accounting_dynamic_reports_community.ks_dfr_amount"><t t-set="value" t-value="sum(g.get('initial_balance') or 0.0 for g in groups)"/></t></td>
+                        <td class="ks-col-amt"><t t-call="accounting_dynamic_reports_community.ks_dfr_amount"><t t-set="value" t-value="sum(g.get('debit') or 0.0 for g in groups)"/></t></td>
+                        <td class="ks-col-amt"><t t-call="accounting_dynamic_reports_community.ks_dfr_amount"><t t-set="value" t-value="sum(g.get('credit') or 0.0 for g in groups)"/></t></td>
+                        <td class="ks-col-amt"><t t-call="accounting_dynamic_reports_community.ks_dfr_amount"><t t-set="value" t-value="sum(g.get('balance') or 0.0 for g in groups)"/></t></td>
+                    </tr>
+                </tfoot>
+            </table>
+        </t>
+        <t t-else="">
+            <table class="ks-pdf-table ks-pdf-table-detail">
+                <thead>
+                    <tr>
+                        <th class="ks-col-date">Date</th>
+                        <th class="ks-col-code">Journal</th>
+                        <th class="ks-col-text" t-esc="third_col_label"/>
+                        <th class="ks-col-text">Entry</th>
+                        <th class="ks-col-name">Label</th>
+                        <th class="ks-col-amt">Debit</th>
+                        <th class="ks-col-amt">Credit</th>
+                        <th class="ks-col-amt">Balance</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <t t-foreach="groups" t-as="g">
+                        <tr class="ks-row-section ks-keep-next">
+                            <td colspan="5" class="ks-col-name"><t t-if="group_code and g.get('code')"><span class="ks-code" t-esc="g.get('code')"/> </t><t t-esc="g.get('name')"/></td>
+                            <td class="ks-col-amt"><t t-call="accounting_dynamic_reports_community.ks_dfr_amount"><t t-set="value" t-value="g.get('debit')"/></t></td>
+                            <td class="ks-col-amt"><t t-call="accounting_dynamic_reports_community.ks_dfr_amount"><t t-set="value" t-value="g.get('credit')"/></t></td>
+                            <td class="ks-col-amt"><t t-call="accounting_dynamic_reports_community.ks_dfr_amount"><t t-set="value" t-value="g.get('balance')"/></t></td>
+                        </tr>
+                        <t t-foreach="g.get('lines') or []" t-as="l">
+                            <tr t-att-class="'ks-row-initial' if (l.get('initial_bal') or l.get('ending_bal')) else 'ks-row-line'">
+                                <td class="ks-col-date" t-esc="ks_fmt_date(l.get('ldate'))"/>
+                                <td class="ks-col-code" t-esc="l.get('lcode') if l.get('lcode') != '-' else ''"/>
+                                <td class="ks-col-text" t-esc="(l.get(third_col_key) or '') if l.get(third_col_key) != '-' else ''"/>
+                                <td class="ks-col-text" t-esc="l.get('move_name')"/>
+                                <td class="ks-col-name" t-esc="(l.get('lname') or '') if l.get('lname') != '-' else ''"/>
+                                <td class="ks-col-amt"><t t-call="accounting_dynamic_reports_community.ks_dfr_amount"><t t-set="value" t-value="l.get('debit')"/></t></td>
+                                <td class="ks-col-amt"><t t-call="accounting_dynamic_reports_community.ks_dfr_amount"><t t-set="value" t-value="l.get('credit')"/></t></td>
+                                <td class="ks-col-amt ks-col-strong"><t t-call="accounting_dynamic_reports_community.ks_dfr_amount"><t t-set="value" t-value="l.get('balance')"/></t></td>
+                            </tr>
+                        </t>
+                    </t>
+                </tbody>
+                <tfoot>
+                    <tr class="ks-row-grand">
+                        <td colspan="5" class="ks-col-name">Total</td>
+                        <td class="ks-col-amt"><t t-call="accounting_dynamic_reports_community.ks_dfr_amount"><t t-set="value" t-value="sum(g.get('debit') or 0.0 for g in groups)"/></t></td>
+                        <td class="ks-col-amt"><t t-call="accounting_dynamic_reports_community.ks_dfr_amount"><t t-set="value" t-value="sum(g.get('credit') or 0.0 for g in groups)"/></t></td>
+                        <td class="ks-col-amt"><t t-call="accounting_dynamic_reports_community.ks_dfr_amount"><t t-set="value" t-value="sum(g.get('balance') or 0.0 for g in groups)"/></t></td>
+                    </tr>
+                </tfoot>
+            </table>
+        </t>
+    </template>
+
+    <template id="ks_pdf_gen_ledger">
+        <t t-set="ks_title" t-value="'General Ledger'"/>
+        <t t-set="show_journals" t-value="True"/>
+        <t t-set="show_accounts" t-value="True"/>
+        <t t-call="accounting_dynamic_reports_community.ks_dfr_layout">
+            <t t-set="opt" t-value="js_data['ks_df_informations']"/>
+            <t t-set="groups" t-value="sorted((js_data.get('ks_report_lines') or {}).values(), key=lambda g: str(g.get('code') or ''))"/>
+            <t t-set="detail" t-value="opt.get('ks_report_with_lines') or opt.get('print_detailed_view')"/>
+            <t t-set="group_label" t-value="'Account'"/>
+            <t t-set="group_code" t-value="True"/>
+            <t t-set="third_col_label" t-value="'Partner'"/>
+            <t t-set="third_col_key" t-value="'partner_name'"/>
+            <t t-call="accounting_dynamic_reports_community.ks_dfr_ledger_body"/>
+        </t>
+    </template>
+
+    <template id="ks_pdf_partner_led">
+        <t t-set="ks_title" t-value="'Partner Ledger'"/>
+        <t t-set="show_partners" t-value="True"/>
+        <t t-call="accounting_dynamic_reports_community.ks_dfr_layout">
+            <t t-set="opt" t-value="js_data['ks_df_informations']"/>
+            <t t-set="groups" t-value="sorted((js_data.get('ks_report_lines') or {}).values(), key=lambda g: (g.get('name') or '').lower())"/>
+            <t t-set="detail" t-value="opt.get('ks_report_with_lines') or opt.get('print_detailed_view')"/>
+            <t t-set="group_label" t-value="'Partner'"/>
+            <t t-set="group_code" t-value="False"/>
+            <t t-set="third_col_label" t-value="'Account'"/>
+            <t t-set="third_col_key" t-value="'account_name'"/>
+            <t t-call="accounting_dynamic_reports_community.ks_dfr_ledger_body"/>
+        </t>
+    </template>
+
+    <!-- ===================== Aged Receivable / Payable ===================== -->
+    <template id="ks_pdf_aged_rec">
+        <t t-set="ks_title" t-value="'Aged Payable' if is_age_payble else 'Aged Receivable'"/>
+        <t t-set="show_partners" t-value="True"/>
+        <t t-call="accounting_dynamic_reports_community.ks_dfr_layout">
+            <t t-set="opt" t-value="js_data['ks_df_informations']"/>
+            <t t-set="periods" t-value="js_data.get('ks_period_list') or []"/>
+            <t t-set="pdict" t-value="js_data.get('ks_partner_dict') or {}"/>
+            <t t-set="detail" t-value="opt.get('ks_report_with_lines') or opt.get('print_detailed_view')"/>
+            <t t-set="partners" t-value="sorted([v for k, v in pdict.items() if k != 'Total'], key=lambda p: (p.get('partner_name') or '').lower())"/>
+            <t t-set="total" t-value="pdict.get('Total') or {}"/>
+            <table class="ks-pdf-table ks-pdf-table-detail">
+                <thead>
+                    <tr>
+                        <th class="ks-col-name" t-att-colspan="4 if detail else 1">Partner</th>
+                        <t t-foreach="periods" t-as="p"><th class="ks-col-amt" t-esc="p"/></t>
+                        <th class="ks-col-amt">Total</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <t t-foreach="partners" t-as="pt">
+                        <tr t-att-class="'ks-row-section ks-keep-next' if detail else 'ks-row-account'">
+                            <td class="ks-col-name" t-att-colspan="4 if detail else 1" t-esc="pt.get('partner_name')"/>
+                            <t t-foreach="periods" t-as="p">
+                                <td class="ks-col-amt"><t t-call="accounting_dynamic_reports_community.ks_dfr_amount"><t t-set="value" t-value="pt.get(p)"/></t></td>
+                            </t>
+                            <td class="ks-col-amt ks-col-strong"><t t-call="accounting_dynamic_reports_community.ks_dfr_amount"><t t-set="value" t-value="pt.get('total')"/></t></td>
+                        </tr>
+                        <t t-if="detail">
+                            <t t-foreach="pt.get('lines') or []" t-as="l">
+                                <tr class="ks-row-line">
+                                    <td class="ks-col-text" style="padding-left: 16px;" t-esc="l.get('move_name')"/>
+                                    <td class="ks-col-date" t-esc="ks_fmt_date(l.get('date_maturity') or l.get('date'))"/>
+                                    <td class="ks-col-text" t-esc="l.get('journal_name')"/>
+                                    <td class="ks-col-text" t-esc="l.get('account_name')"/>
+                                    <t t-foreach="periods" t-as="p">
+                                        <td class="ks-col-amt"><t t-call="accounting_dynamic_reports_community.ks_dfr_amount"><t t-set="value" t-value="l.get('range_%s' % p_index)"/></t></td>
+                                    </t>
+                                    <td class="ks-col-amt"><t t-call="accounting_dynamic_reports_community.ks_dfr_amount"><t t-set="value" t-value="sum(l.get('range_%s' % i) or 0.0 for i in range(len(periods)))"/></t></td>
+                                </tr>
+                            </t>
+                        </t>
+                    </t>
+                </tbody>
+                <tfoot t-if="total">
+                    <tr class="ks-row-grand">
+                        <td class="ks-col-name" t-att-colspan="4 if detail else 1">Total</td>
+                        <t t-foreach="periods" t-as="p">
+                            <td class="ks-col-amt"><t t-call="accounting_dynamic_reports_community.ks_dfr_amount"><t t-set="value" t-value="total.get(p)"/></t></td>
+                        </t>
+                        <td class="ks-col-amt"><t t-call="accounting_dynamic_reports_community.ks_dfr_amount"><t t-set="value" t-value="total.get('total')"/></t></td>
+                    </tr>
+                </tfoot>
+            </table>
+        </t>
+    </template>
+
+    <template id="ks_pdf_aged_pay">
+        <t t-set="is_age_payble" t-value="True"/>
+        <t t-call="accounting_dynamic_reports_community.ks_pdf_aged_rec"/>
+    </template>
+
+    <!-- ===================== Consolidated Journals ===================== -->
+    <template id="ks_pdf_journals">
+        <t t-set="ks_title" t-value="'Consolidated Journals'"/>
+        <t t-set="show_journals" t-value="True"/>
+        <t t-call="accounting_dynamic_reports_community.ks_dfr_layout">
+            <t t-set="opt" t-value="js_data['ks_df_informations']"/>
+            <t t-set="rows" t-value="js_data.get('ks_report_lines') or []"/>
+            <t t-set="journals" t-value="[r for r in rows if r.get('id') != 'total']"/>
+            <t t-set="total" t-value="([r for r in rows if r.get('id') == 'total'] or [{}])[0]"/>
+            <table class="ks-pdf-table">
+                <thead>
+                    <tr>
+                        <th class="ks-col-code">Code</th>
+                        <th class="ks-col-name">Journal / Account</th>
+                        <th class="ks-col-amt">Debit</th>
+                        <th class="ks-col-amt">Credit</th>
+                        <th class="ks-col-amt">Balance</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <t t-foreach="journals" t-as="j">
+                        <tr class="ks-row-section ks-keep-next">
+                            <td class="ks-col-name" colspan="2" t-esc="j.get('name')"/>
+                            <td class="ks-col-amt"><t t-call="accounting_dynamic_reports_community.ks_dfr_amount"><t t-set="value" t-value="j.get('debit')"/></t></td>
+                            <td class="ks-col-amt"><t t-call="accounting_dynamic_reports_community.ks_dfr_amount"><t t-set="value" t-value="j.get('credit')"/></t></td>
+                            <td class="ks-col-amt"><t t-call="accounting_dynamic_reports_community.ks_dfr_amount"><t t-set="value" t-value="j.get('balance')"/></t></td>
+                        </tr>
+                        <t t-foreach="j.get('lines') or []" t-as="l">
+                            <tr class="ks-row-line">
+                                <td class="ks-col-code" t-esc="l.get('account_code')"/>
+                                <td class="ks-col-name" style="padding-left: 16px;">
+                                    <t t-esc="l.get('account_name')"/>
+                                    <span t-if="l.get('month') and not opt.get('ks_merged')" class="ks-muted" t-esc="' (%s/%s)' % (l.get('month'), l.get('yyyy'))"/>
+                                </td>
+                                <td class="ks-col-amt"><t t-call="accounting_dynamic_reports_community.ks_dfr_amount"><t t-set="value" t-value="l.get('debit')"/></t></td>
+                                <td class="ks-col-amt"><t t-call="accounting_dynamic_reports_community.ks_dfr_amount"><t t-set="value" t-value="l.get('credit')"/></t></td>
+                                <td class="ks-col-amt"><t t-call="accounting_dynamic_reports_community.ks_dfr_amount"><t t-set="value" t-value="l.get('balance')"/></t></td>
+                            </tr>
+                        </t>
+                    </t>
+                </tbody>
+                <tfoot t-if="total">
+                    <tr class="ks-row-grand">
+                        <td class="ks-col-name" colspan="2">Total</td>
+                        <td class="ks-col-amt"><t t-call="accounting_dynamic_reports_community.ks_dfr_amount"><t t-set="value" t-value="total.get('debit')"/></t></td>
+                        <td class="ks-col-amt"><t t-call="accounting_dynamic_reports_community.ks_dfr_amount"><t t-set="value" t-value="total.get('credit')"/></t></td>
+                        <td class="ks-col-amt"><t t-call="accounting_dynamic_reports_community.ks_dfr_amount"><t t-set="value" t-value="total.get('balance')"/></t></td>
+                    </tr>
+                </tfoot>
+            </table>
+        </t>
+    </template>
+
+    <!-- ===================== Tax Report ===================== -->
+    <template id="ks_pdf_tax">
+        <t t-set="ks_title" t-value="'Tax Report'"/>
+        <t t-call="accounting_dynamic_reports_community.ks_dfr_layout">
+            <t t-set="opt" t-value="js_data['ks_df_informations']"/>
+            <t t-set="ks_cmp" t-value="(opt.get('ks_diff_filter') or {}).get('ks_diff_filter_enablity') and (opt.get('ks_differ') or {}).get('ks_intervals')"/>
+            <t t-set="ks_labels" t-value="[(opt.get('date') or {}).get('ks_string', '')] + ([i['ks_string'] for i in opt['ks_differ']['ks_intervals']] if ks_cmp else [])"/>
+            <t t-set="ks_pair" t-value="lambda a, i: (((a.get('balance_cmp') or [])[i:i + 1] or [[{}, {}]])[0])"/>
+            <table class="ks-pdf-table">
+                <thead>
+                    <tr t-if="ks_cmp">
+                        <th/>
+                        <t t-foreach="ks_labels" t-as="lb"><th colspan="2" class="ks-col-amt ks-th-group" t-esc="lb"/></t>
+                    </tr>
+                    <tr>
+                        <th class="ks-col-name">Tax</th>
+                        <t t-foreach="ks_labels" t-as="lb">
+                            <th class="ks-col-amt">Net Amount</th>
+                            <th class="ks-col-amt">Tax</th>
+                        </t>
+                    </tr>
+                </thead>
+                <tbody>
+                    <t t-foreach="js_data.get('ks_report_lines') or []" t-as="a">
+                        <t t-set="lvl" t-value="a.get('ks_level') or 1"/>
+                        <tr t-att-class="'ks-row-grand' if a.get('id') is None and lvl == 1 else ('ks-row-section' if lvl == 1 else 'ks-row-account')">
+                            <td class="ks-col-name" t-att-style="'padding-left: %spx;' % (6 + 14 * (lvl - 1))" t-esc="a.get('ks_name')"/>
+                            <t t-foreach="ks_labels" t-as="lb">
+                                <t t-set="pair" t-value="ks_pair(a, lb_index)"/>
+                                <t t-set="net" t-value="a.get('ks_net_amount') if lb_index == 0 and not ks_cmp else (pair[0] or {}).get('ks_com_net')"/>
+                                <t t-set="tax" t-value="a.get('tax') if lb_index == 0 and not ks_cmp else (pair[1] if len(pair) &gt; 1 else {}).get('ks_com_tax')"/>
+                                <td class="ks-col-amt"><t t-call="accounting_dynamic_reports_community.ks_dfr_amount"><t t-set="value" t-value="net"/></t></td>
+                                <td class="ks-col-amt ks-col-strong"><t t-call="accounting_dynamic_reports_community.ks_dfr_amount"><t t-set="value" t-value="tax"/></t></td>
+                            </t>
+                        </tr>
+                    </t>
+                </tbody>
+            </table>
+        </t>
+    </template>
+
+    <!-- ===================== Report actions ===================== -->
+    <record id="ks_dynamic_financial_report_action" model="ir.actions.report">
+        <field name="name">Dynamic Financial Report</field>
+        <field name="model">ks.dynamic.financial.reports</field>
+        <field name="report_type">qweb-pdf</field>
+        <field name="report_name">accounting_dynamic_reports_community.ks_pdf_statement</field>
+        <field name="report_file">accounting_dynamic_reports_community.ks_pdf_statement</field>
+        <field name="paperformat_id" ref="ks_dfr_paperformat_portrait"/>
+        <field name="binding_model_id" eval="False"/>
+    </record>
+    <record id="ks_dynamic_financial_executive_action" model="ir.actions.report">
+        <field name="name">Executive Summary</field>
+        <field name="model">ks.dynamic.financial.reports</field>
+        <field name="report_type">qweb-pdf</field>
+        <field name="report_name">accounting_dynamic_reports_community.ks_pdf_executive</field>
+        <field name="report_file">accounting_dynamic_reports_community.ks_pdf_executive</field>
+        <field name="paperformat_id" ref="ks_dfr_paperformat_portrait"/>
+        <field name="binding_model_id" eval="False"/>
+    </record>
+    <record id="ks_dynamic_financial_tax_action" model="ir.actions.report">
+        <field name="name">Tax Report</field>
+        <field name="model">ks.dynamic.financial.reports</field>
+        <field name="report_type">qweb-pdf</field>
+        <field name="report_name">accounting_dynamic_reports_community.ks_pdf_tax</field>
+        <field name="report_file">accounting_dynamic_reports_community.ks_pdf_tax</field>
+        <field name="paperformat_id" ref="ks_dfr_paperformat_portrait"/>
+        <field name="binding_model_id" eval="False"/>
+    </record>
+    <record id="ks_dynamic_financial_trial_bal_action" model="ir.actions.report">
+        <field name="name">Trial Balance Report</field>
+        <field name="model">ks.dynamic.financial.reports</field>
+        <field name="report_type">qweb-pdf</field>
+        <field name="report_name">accounting_dynamic_reports_community.ks_pdf_trial_bal</field>
+        <field name="report_file">accounting_dynamic_reports_community.ks_pdf_trial_bal</field>
+        <field name="paperformat_id" ref="ks_dfr_paperformat_landscape"/>
+        <field name="binding_model_id" eval="False"/>
+    </record>
+    <record id="ks_dynamic_financial_gel_bal_action" model="ir.actions.report">
+        <field name="name">General Ledger Report</field>
+        <field name="model">ks.dynamic.financial.reports</field>
+        <field name="report_type">qweb-pdf</field>
+        <field name="report_name">accounting_dynamic_reports_community.ks_pdf_gen_ledger</field>
+        <field name="report_file">accounting_dynamic_reports_community.ks_pdf_gen_ledger</field>
+        <field name="paperformat_id" ref="ks_dfr_paperformat_landscape"/>
+        <field name="binding_model_id" eval="False"/>
+    </record>
+    <record id="ks_dynamic_financial_partner_led_action" model="ir.actions.report">
+        <field name="name">Partner Ledger Report</field>
+        <field name="model">ks.dynamic.financial.reports</field>
+        <field name="report_type">qweb-pdf</field>
+        <field name="report_name">accounting_dynamic_reports_community.ks_pdf_partner_led</field>
+        <field name="report_file">accounting_dynamic_reports_community.ks_pdf_partner_led</field>
+        <field name="paperformat_id" ref="ks_dfr_paperformat_landscape"/>
+        <field name="binding_model_id" eval="False"/>
+    </record>
+    <record id="ks_dynamic_financial_age_rec_action" model="ir.actions.report">
+        <field name="name">Aged Receivable Report</field>
+        <field name="model">ks.dynamic.financial.reports</field>
+        <field name="report_type">qweb-pdf</field>
+        <field name="report_name">accounting_dynamic_reports_community.ks_pdf_aged_rec</field>
+        <field name="report_file">accounting_dynamic_reports_community.ks_pdf_aged_rec</field>
+        <field name="paperformat_id" ref="ks_dfr_paperformat_landscape"/>
+        <field name="binding_model_id" eval="False"/>
+    </record>
+    <record id="ks_dynamic_financial_age_pay_action" model="ir.actions.report">
+        <field name="name">Aged Payable Report</field>
+        <field name="model">ks.dynamic.financial.reports</field>
+        <field name="report_type">qweb-pdf</field>
+        <field name="report_name">accounting_dynamic_reports_community.ks_pdf_aged_pay</field>
+        <field name="report_file">accounting_dynamic_reports_community.ks_pdf_aged_pay</field>
+        <field name="paperformat_id" ref="ks_dfr_paperformat_landscape"/>
+        <field name="binding_model_id" eval="False"/>
+    </record>
+    <record id="ks_dynamic_financial_cons_journal_action" model="ir.actions.report">
+        <field name="name">Consolidated Journals Report</field>
+        <field name="model">ks.dynamic.financial.reports</field>
+        <field name="report_type">qweb-pdf</field>
+        <field name="report_name">accounting_dynamic_reports_community.ks_pdf_journals</field>
+        <field name="report_file">accounting_dynamic_reports_community.ks_pdf_journals</field>
+        <field name="paperformat_id" ref="ks_dfr_paperformat_portrait"/>
+        <field name="binding_model_id" eval="False"/>
+    </record>
+</odoo>

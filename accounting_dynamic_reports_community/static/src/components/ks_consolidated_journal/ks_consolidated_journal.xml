@@ -1,0 +1,160 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates>
+    <t t-name="accounting_dynamic_reports_community.ks_df_cj_action" owl="1">
+        <div class="container-fluid mt-4 dfr-table-container">
+            <div class="row justify-content-center">
+            <div class="col-md-12 col-lg-10">
+                <div class="card">
+                    <div class="card-body table-responsive">
+                        <table id="data-bs-lines" class="table table-condensed dfr-main-table mb-0" cellspacing="0" width="100%">
+                            <thead>
+                                <tr>
+                                    <th colspan="8">Journal (code)</th>
+                                    <th class="">Debit</th>
+                                    <th class="">Credit</th>
+                                    <th class="">Balance</th>
+                                    <th class=""/>
+                                    <th class=""/>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <t t-foreach="props.ks_report_lines" t-as="account" t-key="account['id']">
+                                    <t t-if="account['id'] != 'total' and account['name']!='Details Per Month'">
+                                        <t t-set="common_id" t-value=""/>
+                                        <tr class="ks_cj-py-mline accordion-toggle collapsed" data-bs-toggle="collapse" t-att-data-bs-journal-id="account['id']" t-attf-data-bs-target=".a{{account['id']}}">
+                                            <td colspan="8">
+                                                  <t t-esc="account &amp;&amp; account['name'] &amp;&amp; typeof account['name'] === 'object' &amp;&amp;                                                   props.lang in account['name'] ? account['name'][props.lang] : account &amp;&amp; account['name'] || ''"/>
+                                            </td>
+                                            <td class="">
+                                                <span t-att-class="ksCls(account['debit'])" t-esc="ksFmt(account['debit'], account['company_currency_symbol'])"/>
+                                            </td>
+                                            <td class="">
+                                                <span t-att-class="ksCls(account['credit'])" t-esc="ksFmt(account['credit'], account['company_currency_symbol'])"/>
+                                            </td>
+                                            <td class="">
+                                                <span t-att-class="ksCls(account['balance'])" t-esc="ksFmt(account['balance'], account['company_currency_symbol'])"/>
+                                            </td>
+                                            <td class=""/>
+                                            <t t-if="account['lines'] and account['lines'].length &gt; 0">
+                                                <td class="toggle-arrow"/>
+                                            </t>
+                                            <t t-else="">
+                                                <td/>
+                                            </t>
+                                            <t t-set="common_id" t-value="'a'+account['id']"/>
+                                        </tr>
+                                        <tr>
+                                            <td colspan="13" class="p-0 hiddenRow">
+                                                <div t-attf-class="a{{account['id']}}" class="collapse">
+                                                    <t t-if="account['lines'].length &gt; 0">
+                                                        <t t-call="ks_df_cj_subsection">
+                                                            <t t-set="accountId" t-value="account['id']"/>
+                                                            <t t-foreach="props.ks_report_lines" t-as="report" t-key="report_index">
+                                                                <t t-if="report.id == accountId">
+                                                                    <t t-set="account_lines" t-value="report.lines"/>
+                                                                </t>
+                                                            </t>
+                                                        </t>
+                                                    </t>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                    </t>
+                                    <t t-if="account['id'] == 'total'">
+                                        <tr class="cj-py-total-line">
+                                            <td colspan="8">
+                                                <span>Total</span>
+                                            </td>
+                                            <td class="">
+                                                <span t-att-class="ksCls(account['debit'])" t-esc="ksFmt(account['debit'], account['company_currency_symbol'])"/>
+                                            </td>
+                                            <td class="">
+                                                <span t-att-class="ksCls(account['credit'])" t-esc="ksFmt(account['credit'], account['company_currency_symbol'])"/>
+                                            </td>
+                                            <td class="">
+                                                <span t-att-class="ksCls(account['balance'])" t-esc="ksFmt(account['balance'], account['company_currency_symbol'])"/>
+                                            </td>
+                                            <td class=""/>
+                                            <td class=""/>
+
+                                        </tr>
+                                    </t>
+                                </t>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+            </div>
+        </div>
+    </t>
+
+    <t t-name="ks_df_cj_subsection" owl="1">
+        <div class="ks_py-mline-table-div">
+            <t t-if="account_lines.length &gt; 0">
+                <table class="ks-mline-data-bs-table w-100">
+                    <thead>
+                        <tr>
+                            <th/>
+                            <th>Account Name</th>
+                            <th class="">Debit</th>
+                            <th class="">Credit</th>
+                            <th class="">Balance</th>
+                            <th/>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <t t-foreach="account_lines" t-as="account_line" t-key="account_line_index">
+                            <t t-set="style" t-value="''"/>
+                            <tr>
+                                <td>
+                                     <div class="dropdown custom-dd">
+                                         <button class="btn btn-secondary" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                                <img src="/accounting_dynamic_reports_community/static/src/img/Vector.svg" alt="dropdown" loading="lazy"/>
+                                         </button>
+                                         <ul class="dropdown-menu" role="menu">
+                                            <li role="presentation">
+                                                <a role="menuitem" class="ks_view-source dropdown-item" tabindex="-1" action="ks_show_df_journal_items" t-att-data-bs-account-id="account_line.account_id" t-on-click="event =&gt; props.ksgetaction(event, props.ks_df_report_opt)">
+                                                    Journal Items
+                                                </a>
+                                            </li>
+                                            <li role="presentation">
+                                                <a role="menuitem" class="ks_view-source dropdown-item" tabindex="1" action="ks_show_df_general_ledger" t-on-click="event =&gt; props.ksgetaction(event, props.ks_df_report_opt)" t-att-data-bs-account-id="account_line.account_id">
+                                                    General Ledger
+                                                </a>
+                                            </li>
+                                        </ul>
+                                    </div>
+                                </td>
+                                <td t-att-style="style">
+                                    <t t-esc="account_line.account_name"/> <t t-esc="account_line.account_code['1']"/>
+                                </td>
+                                <td t-att-style="style">
+                                    <span t-att-class="ksCls(account_line.debit)" t-esc="ksFmt(account_line.debit, account['company_currency_symbol'])"/>
+                                </td>
+                                <td t-att-style="style">
+                                    <span t-att-class="ksCls(account_line.credit)" t-esc="ksFmt(account_line.credit, account['company_currency_symbol'])"/>
+                                </td>
+                                <td t-att-style="style">
+                                    <span t-att-class="ksCls(account_line.balance)" t-esc="ksFmt(account_line.balance, account['company_currency_symbol'])"/>
+                                </td>
+                                <td t-att-style="style">
+                                    <t t-if="account_line['currency_symbol'] != account_line['company_currency_symbol']">
+                                        <t t-if="account_line['currency_position'] == 'before'">
+                                            <span t-esc="account_line['currency_symbol']"/>
+                                            <span t-esc="account_line['amount_currency']"/>
+                                        </t>
+                                        <t t-if="account_line['currency_position'] == 'after'">
+                                            <span t-esc="account_line['amount_currency']"/>
+                                            <span t-esc="account_line['currency_symbol']"/>
+                                        </t>
+                                    </t>
+                                </td>
+                            </tr>
+                        </t>
+                    </tbody>
+                </table>
+            </t>
+        </div>
+    </t>
+</templates>

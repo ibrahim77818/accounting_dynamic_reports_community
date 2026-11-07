@@ -1,0 +1,190 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates>
+    <t t-name="accounting_dynamic_reports_community.ks_df_pl_action" owl="1">
+        <t t-set="ks_report_lines" t-value="props.ks_report_lines"/>
+        <t t-set="ks_enable_ledger_in_bal" t-value="props.ks_enable_ledger_in_bal"/>
+        <div class="container-fluid mt-4 dfr-table-container">
+            <div class="row justify-content-center">
+                <div class="col-md-12 col-lg-10">
+                    <div class="card">
+                        <div class="card-body table-responsive">
+                            <table id="data-bs-lines" class="table border table-condensed dfr-main-table mb-0" cellspacing="0" width="100%">
+                                <thead>
+                                    <tr>
+                                        <th colspan="6">Partner</th>
+                                        <t t-if="ks_enable_ledger_in_bal and props.ks_df_report_opt.date.ks_process == 'range'">
+                                            <th>Initial Balance</th>
+                                        </t>
+                                        <th class="">Debit</th>
+                                        <th class="">Credit</th>
+                                        <th class="">Balance</th>
+                                        <th class=""></th>
+                                        <th class=""></th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <t t-foreach="props.ks_report_lines" t-as="account" t-key="account">
+                                        <t t-set="common_id" t-value=""/>
+                                        <tr class="ks_pl-py-mline accordion-toggle collapsed" data-bs-toggle="collapse"
+                                            t-att-data-bs-account-id="props.ks_report_lines[account]['id']"
+                                            t-attf-data-bs-target=".a{{props.ks_report_lines[account]['id']}}">
+                                            <td colspan="6">
+                                                <span>
+                                                    <t t-esc="props.ks_report_lines[account]['name']"/>
+                                                </span>
+                                            </td>
+                                            <t t-if="ks_enable_ledger_in_bal and props.ks_df_report_opt.date.ks_process == 'range'">
+                                                <td class="ks_amt">
+                                                    <span t-att-class="ksCls(props.ks_report_lines[account]['initial_balance'])" t-esc="ksFmt(props.ks_report_lines[account]['initial_balance'], props.ks_report_lines[account]['company_currency_symbol'])"/>
+                                                </td>
+                                            </t>
+                                            <td class="ks_amt">
+                                                <span t-att-class="ksCls(props.ks_report_lines[account]['debit'])" t-esc="ksFmt(props.ks_report_lines[account]['debit'], props.ks_report_lines[account]['company_currency_symbol'])"/>
+                                            </td>
+                                            <td class="ks_amt">
+                                                <span t-att-class="ksCls(props.ks_report_lines[account]['credit'])" t-esc="ksFmt(props.ks_report_lines[account]['credit'], props.ks_report_lines[account]['company_currency_symbol'])"/>
+                                            </td>
+                                            <td class="ks_amt">
+                                                <span t-att-class="ksCls(props.ks_report_lines[account]['balance'])" t-esc="ksFmt(props.ks_report_lines[account]['balance'], props.ks_report_lines[account]['company_currency_symbol'])"/>
+                                            </td>
+                                            <td class="ks_amt"></td>
+                                            <td class="toggle-arrow"></td>
+                                            <t t-set="common_id" t-value="'a'+props.ks_report_lines[account]['id']"/>
+
+                                        </tr>
+                                        <tr>
+                                            <td class="p-0 hiddenRow" colspan="14">
+                                                <div t-attf-class="a{{props.ks_report_lines[account]['id']}}" class="collapse">
+                                                    <t t-call="ks_df_sub_pl0">
+                                                        <t t-set="account_data" t-value="props.ks_report_lines[account].lines"/>
+                                                    </t>
+                                                    <t t-if="props.ks_report_lines[account].lines.length > state.limit">
+                                                        <div class="d-flex justify-content-center align-items-center">
+                                                            <button class="load_btn" t-on-click="loadMoreLines">Load More ....</button>
+                                                        </div>
+                                                    </t>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                    </t>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </t>
+
+    <t t-name="ks_df_sub_pl0" owl="1">
+        <div class="ks_py-mline-table-div">
+            <table class="table">
+                <thead class="ks_thead">
+                    <tr>
+                        <th></th>
+                        <th>Date</th>
+                        <th>JRNL</th>
+                        <th>Account</th>
+                        <th>Move</th>
+                        <th>Entry Label</th>
+                        <t t-if="ks_enable_ledger_in_bal and props.ks_df_report_opt.date.ks_process == 'range'">
+                            <th class="">Initial Balance</th>
+                        </t>
+                        <th class="">Debit</th>
+                        <th class="">Credit</th>
+                        <th class="">Balance</th>
+                        <th class=""></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <t t-set="display_lines" t-value="account_data.slice(0, Math.min(state.limit, account_data.length))"/>
+                    <t t-foreach="display_lines" t-as="account_line" t-key="account_line_index">
+                        <t t-set="style" t-value="''"/>
+                        <t t-if="account_line.move_name == 'Initial Balance'">
+                            <t t-set="style" t-value="'font-style: italic;'"/>
+                        </t>
+                        <t t-if="account_line.move_name == 'Ending Balance'">
+                            <t t-set="style" t-value="'font-style: italic;'"/>
+                        </t>
+                        <tr>
+                            <td t-att-data-bs-move-id="account_line.move_id">
+                                 <div class="dropdown custom-dd">
+                                    <button class="btn btn-secondary" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                        <img src="/accounting_dynamic_reports_community/static/src/img/Vector.svg" alt="dropdown"
+                                                 loading="lazy"/>
+                                    </button>
+                                     <ul class="dropdown-menu" role="menu">
+                                        <li role="presentation">
+                                            <a role="menuitem" class="ks_view-source dropdown-item" tabindex="-1"
+                                               action="ks_df_show_move_line"
+                                               t-on-click="event => props.ksgetaction(event, props.ks_df_report_opt)"
+                                               t-att-data-bs-move-id="account_line.move_id">
+                                                Move Line
+                                            </a>
+                                        </li>
+                                     </ul>
+                                </div>
+                            </td>
+                            <t t-if="account_line.ldate">
+                                <td t-att-data-bs-move-id="account_line.move_id">
+                                    <t t-esc="account_line.ldate"/>
+                                </td>
+                            </t>
+                            <t t-else="">
+                                <td>-</td>
+                            </t>
+                            <t t-if="account_line.lcode">
+                                <td>
+                                    <t t-esc="account_line.lcode"/>
+                                </td>
+                            </t>
+                            <t t-else="">
+                                <td>-</td>
+                            </t>
+                            <t t-if="account_line.account_name">
+                                <td>
+                                    <t t-esc="typeof account_line.account_name === 'object' &amp;&amp;
+                                        account_line.account_name[ks_lang] ? account_line.account_name[ks_lang] : account_line.account_name;"/>
+                                </td>
+                            </t>
+                            <t t-else="">
+                                <td>-</td>
+                            </t>
+                            <t t-if="account_line.move_name">
+                                <td t-att-style="style">
+                                    <t t-esc="account_line.move_name"/>
+                                </td>
+                            </t>
+                            <t t-else="">
+                                <td>-</td>
+                            </t>
+                            <t t-if="account_line.lname">
+                                <td t-att-style="style">
+                                    <t t-esc="account_line.lname"/>
+                                </td>
+                            </t>
+                            <t t-else="">
+                                <td>-</td>
+                            </t>
+                            <t t-if="props.ks_enable_ledger_in_bal and props.ks_df_report_opt.date.ks_process == 'range'">
+                                <td t-att-style="style" class="ks_amt">
+                                    <span t-att-class="ksCls(account_line.initial_balance)" t-esc="ksFmt(account_line.initial_balance, props.ks_report_lines[account]['company_currency_symbol'])"/>
+                                </td>
+                            </t>
+                            <td t-att-style="style" class="ks_amt">
+                                <span t-att-class="ksCls(account_line.debit)" t-esc="ksFmt(account_line.debit, props.ks_report_lines[account]['company_currency_symbol'])"/>
+                            </td>
+                            <td t-att-style="style" class="ks_amt">
+                                <span t-att-class="ksCls(account_line.credit)" t-esc="ksFmt(account_line.credit, props.ks_report_lines[account]['company_currency_symbol'])"/>
+                            </td>
+                            <td t-att-style="style" class="ks_amt">
+                                <span t-att-class="ksCls(account_line.balance)" t-esc="ksFmt(account_line.balance, props.ks_report_lines[account]['company_currency_symbol'])"/>
+                            </td>
+                            <td/>
+                        </tr>
+                    </t>
+                </tbody>
+            </table>
+        </div>
+    </t>
+</templates>

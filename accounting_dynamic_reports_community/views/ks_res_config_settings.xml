@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="ks_dfr_res_config_settings_view_form_inherited" model="ir.ui.view">
+        <field name="name">res.config.settings.view.form.inherit.account.dynamic.reports</field>
+        <field name="model">res.config.settings</field>
+        <field name="inherit_id" ref="account.res_config_settings_view_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//div[@name='default_taxes_setting_container']" position="after">
+                <h2>Dynamic Financial Reports</h2>
+                <div class="row mt16 o_settings_container" name="ks_dfr_settings">
+                    <div class="col-12 col-lg-6 o_setting_box" id="ks_enable_ledger_in_bal_settings">
+                        <div class="o_setting_left_pane">
+                            <field name="ks_enable_ledger_in_bal"/>
+                        </div>
+                        <div class="o_setting_right_pane">
+                            <label for="ks_enable_ledger_in_bal"/>
+                            <div class="text-muted">Show the initial balance in the General and Partner Ledger.</div>
+                        </div>
+                    </div>
+                    <div class="col-12 col-lg-6 o_setting_box" id="ks_disable_trial_en_bal_settings">
+                        <div class="o_setting_left_pane">
+                            <field name="ks_disable_trial_en_bal"/>
+                        </div>
+                        <div class="o_setting_right_pane">
+                            <label for="ks_disable_trial_en_bal"/>
+                            <div class="text-muted">Move the initial balance of income/expense accounts to Current Year Earnings in the Trial Balance.</div>
+                        </div>
+                    </div>
+                    <div class="col-12 col-lg-6 o_setting_box" id="ks_disable_bs_sign_settings">
+                        <div class="o_setting_left_pane">
+                            <field name="ks_disable_bs_sign"/>
+                        </div>
+                        <div class="o_setting_right_pane">
+                            <label for="ks_disable_bs_sign"/>
+                            <div class="text-muted">Show Assets and Liabilities without a negative sign on the Balance Sheet.</div>
+                        </div>
+                    </div>
+                    <div class="col-12 col-lg-6 o_setting_box" id="ks_enable_net_tax_settings">
+                        <div class="o_setting_left_pane">
+                            <field name="ks_enable_net_tax"/>
+                        </div>
+                        <div class="o_setting_right_pane">
+                            <label for="ks_enable_net_tax"/>
+                            <div class="text-muted">Show the net tax line on the Tax Report.</div>
+                        </div>
+                    </div>
+                </div>
+            </xpath>
+        </field>
+    </record>
+</odoo>

@@ -1,0 +1,295 @@
+// PDF styles for the Dynamic Financial Reports (rendered by wkhtmltopdf).
+// wkhtmltopdf uses an old QtWebKit: stick to tables, no flex, no CSS variables.
+
+$ks-navy: #1f3a5f;
+$ks-navy-soft: #e8eef6;
+$ks-teal: #2a9d8f;
+$ks-border: #dde3ea;
+$ks-text: #2b2f36;
+$ks-muted: #6b7785;
+$ks-neg: #c0392b;
+$ks-pos: #1e7b4f;
+$ks-zebra: #f8fafc;
+
+// ---------- Header band (lives in the top margin) ----------
+// Height is fixed and smaller than paperformat.header_spacing (26mm) so the
+// header can never overlap the repeated <thead> of the following pages.
+.ks-pdf-header-band {
+    font-family: "Lato", "Helvetica Neue", Arial, sans-serif;
+    color: $ks-text;
+}
+
+.ks-pdf-header {
+    width: 100%;
+    height: 21mm;
+    max-height: 21mm;
+    overflow: hidden;
+    border-collapse: collapse;
+    border-bottom: 2px solid $ks-navy;
+    table-layout: fixed;
+
+    tr,
+    td {
+        border: 0 !important;
+        background: transparent;
+    }
+
+    td {
+        vertical-align: middle;
+        padding: 0 0 2mm 0;
+    }
+
+    .ks-h-left {
+        width: 32%;
+        text-align: left;
+    }
+
+    .ks-h-center {
+        width: 40%;
+        text-align: center;
+    }
+
+    .ks-h-right {
+        width: 28%;
+        text-align: right;
+        font-size: 9px;
+        color: $ks-muted;
+        line-height: 1.5;
+    }
+
+    .ks-h-logo {
+        max-height: 11mm;
+        max-width: 40mm;
+        display: block;
+        margin-bottom: 1mm;
+    }
+
+    .ks-h-company {
+        font-size: 11px;
+        font-weight: bold;
+        color: $ks-navy;
+        white-space: nowrap;
+        overflow: hidden;
+    }
+
+    .ks-h-title {
+        font-size: 17px;
+        font-weight: bold;
+        color: $ks-navy;
+        letter-spacing: 0.3px;
+    }
+
+    .ks-h-sub {
+        font-size: 10px;
+        color: $ks-teal;
+        margin-top: 1mm;
+    }
+}
+
+// ---------- Footer ----------
+.ks-pdf-footer {
+    font-family: "Lato", "Helvetica Neue", Arial, sans-serif;
+    font-size: 8px;
+    color: $ks-muted;
+    border-top: 1px solid $ks-border;
+    padding-top: 2mm;
+
+    .ks-foot-right {
+        float: right;
+    }
+}
+
+// ---------- Body ----------
+.ks-pdf {
+    font-family: "Lato", "Helvetica Neue", Arial, sans-serif;
+    font-size: 10px;
+    color: $ks-text;
+
+    .ks-muted {
+        color: $ks-muted;
+        font-size: 9px;
+    }
+
+    .ks-code {
+        color: $ks-muted;
+        font-weight: normal;
+        margin-right: 4px;
+    }
+
+    .ks-pdf-end {
+        margin-top: 6mm;
+        text-align: center;
+        font-size: 8px;
+        letter-spacing: 2px;
+        text-transform: uppercase;
+        color: $ks-muted;
+    }
+}
+
+// Filter summary card
+.ks-pdf-filters {
+    width: 100%;
+    margin: 0 0 4mm 0;
+    border-collapse: separate;
+    border-spacing: 0;
+    background: $ks-navy-soft;
+    border-left: 3px solid $ks-teal;
+    page-break-inside: avoid;
+
+    td {
+        padding: 2mm 3mm;
+        vertical-align: top;
+    }
+
+    .ks-f-label {
+        font-size: 8px;
+        text-transform: uppercase;
+        letter-spacing: 0.6px;
+        color: $ks-muted;
+    }
+
+    .ks-f-value {
+        font-size: 10px;
+        font-weight: bold;
+        color: $ks-navy;
+    }
+}
+
+// ---------- Data table ----------
+.ks-pdf-table {
+    width: 100%;
+    border-collapse: collapse;
+    page-break-inside: auto;
+
+    // Repeat the head on every page and never split a row: this is the
+    // wkhtmltopdf-safe combination that avoids overlapping rows/heads.
+    thead {
+        display: table-header-group;
+    }
+
+    tfoot {
+        display: table-row-group;
+    }
+
+    tr {
+        page-break-inside: avoid;
+        page-break-after: auto;
+    }
+
+    th {
+        background: $ks-navy;
+        color: #fff;
+        font-size: 9px;
+        font-weight: bold;
+        text-transform: uppercase;
+        letter-spacing: 0.4px;
+        padding: 2.2mm 2mm;
+        border: 0;
+        text-align: left;
+    }
+
+    th.ks-th-group {
+        background: #2d4f7c;
+        text-align: center !important;
+        border-left: 1px solid #fff;
+    }
+
+    td {
+        padding: 1.6mm 2mm;
+        border-bottom: 1px solid $ks-border;
+        vertical-align: top;
+    }
+
+    .ks-col-amt {
+        text-align: right;
+        white-space: nowrap;
+        width: 14%;
+    }
+
+    .ks-col-code {
+        white-space: nowrap;
+        width: 8%;
+    }
+
+    .ks-col-date {
+        white-space: nowrap;
+        width: 8%;
+    }
+
+    .ks-col-text {
+        width: 11%;
+    }
+
+    .ks-col-strong {
+        font-weight: bold;
+    }
+
+    // Row levels
+    tr.ks-row-section td {
+        background: $ks-navy-soft;
+        color: $ks-navy;
+        font-weight: bold;
+        border-bottom: 1px solid #c9d4e3;
+    }
+
+    tr.ks-row-subtotal td {
+        font-weight: bold;
+        color: $ks-navy;
+    }
+
+    tr.ks-row-account td,
+    tr.ks-row-line td {
+        color: $ks-text;
+    }
+
+    tr.ks-row-line:nth-child(even) td {
+        background: $ks-zebra;
+    }
+
+    tr.ks-row-initial td {
+        font-style: italic;
+        color: $ks-muted;
+        background: #fbfcfd;
+    }
+
+    tr.ks-row-grand td {
+        background: $ks-navy;
+        color: #fff;
+        font-weight: bold;
+        font-size: 10.5px;
+        border-bottom: 0;
+        padding-top: 2.4mm;
+        padding-bottom: 2.4mm;
+    }
+
+    tr.ks-keep-next {
+        page-break-after: avoid;
+    }
+
+    &.ks-pdf-table-detail td {
+        font-size: 9px;
+        padding-top: 1.2mm;
+        padding-bottom: 1.2mm;
+    }
+}
+
+// ---------- Amount colours ----------
+.ks-pdf .ks-neg {
+    color: $ks-neg;
+}
+
+.ks-pdf .ks-zero {
+    color: #b3bcc7;
+}
+
+.ks-pdf tr.ks-row-grand .ks-pos {
+    color: #b9f0d2;
+}
+
+.ks-pdf tr.ks-row-grand .ks-neg {
+    color: #ffc4bd;
+}
+
+.ks-pdf tr.ks-row-grand .ks-zero {
+    color: #c7d3e3;
+}

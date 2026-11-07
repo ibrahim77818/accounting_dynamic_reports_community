@@ -1,0 +1,182 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates>
+    <t t-name="accounting_dynamic_reports_community.ks_df_other_reports" owl="1">
+        <t t-set="ks_report_lines" t-value="props.ks_report_lines"/>
+        <t t-set="ks_df_report_opt" t-value="props.ks_df_report_opt"/>
+        <div class="custom-table-box">
+            <div class="container">
+                <div class="row justify-content-center">
+                    <div class="col-lg-11">
+                        <div class="accordion-table-wrapper">
+                            <div class="custom-accordion-table profit-loss" cellspacing="0" width="100%">
+                                <div class="custom-thead">
+                                    <div class="custom-tr">
+                                        <div class="custom-cell"></div>
+                                        <div class="custom-cell" colspan="1"></div>
+                                        <t t-if="ks_df_report_opt['ks_diff_filter']['ks_debit_credit_visibility']">
+                                            <div class="custom-cell" colspan="1">
+                                                <div>Debit</div>
+                                            </div>
+                                            <div class="custom-cell" colspan="1">
+                                                <div>Credit</div>
+                                            </div>
+                                        </t>
+                                        <t t-if="ks_df_report_opt['ks_diff_filter']['ks_diff_filter_enablity']">
+                                            <t t-foreach="ks_report_lines[0]['balance_cmp']" t-as="current_interval"
+                                               t-key="current_interval">
+                                                <div class="custom-cell" colspan="1">
+                                                    <t t-esc="current_interval.split('comp_bal_')[1]"/>
+                                                </div>
+                                            </t>
+                                        </t>
+                                        <div class="custom-cell" colspan="1">
+                                            <div>Balance</div>
+                                        </div>
+                                        <t t-if="props.ks_df_report_opt['ks_differ']['ks_intervals'].length == 1">
+                                            <div class="custom-cell"></div>
+                                        </t>
+                                        <div class="custom-cell" colspan="1"></div>
+                                    </div>
+                                </div>
+                                <div class="custom-tbody">
+                                    <t t-set="count" t-value="0"/>
+                                    <t t-foreach="ks_report_lines" t-as="line" t-key="count">
+                                        <t t-set="count" t-value="count+1"/>
+                                        <t t-call="ks_df_sub_lines">
+                                            <t t-set="current_line" t-value="line"/>
+                                        </t>
+                                    </t>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <t t-if="showgenreport">
+            <t t-set="ks_initial_balance" t-value="props.ks_initial_balance"/>
+            <t t-set="ks_current_balance" t-value="props.ks_current_balance"/>
+            <t t-set="ks_ending_balance" t-value="props.ks_ending_balance"/>
+            <div class="row ks-data-bs-summary">
+                <div class="col-8"/>
+                <div class="col-4">
+                    <table>
+                        <tr>
+                            <td>Initial Cash Balance</td>
+                            <td><t t-esc="ks_initial_balance"/></td>
+                        </tr>
+                        <tr>
+                            <td>Current Cash Balance</td>
+                            <td><t t-esc="ks_current_balance"/></td>
+                        </tr>
+                        <tr>
+                            <td>Net Cash Balance</td>
+                            <td><t t-esc="ks_ending_balance"/></td>
+                        </tr>
+                    </table>
+                </div>
+            </div>
+        </t>
+    </t>
+
+    <t t-name="ks_df_sub_lines" owl="1">
+        <t t-set="self_id" t-value="current_line['self_id']"/>
+        <t t-set="has_children" t-value="current_line['children'] and current_line['children'].length > 0"/>
+
+        <div t-att-data-bs-parent-id="current_line['parent']"
+            class="custom-body-tr accordion-toggle collapsed"
+            t-attf-class="ks_py-mline row-toggle current_line{{current_line['parent']}} ks_lvl_{{current_line['ks_level']}} {{current_line['ks_df_report_account_type'] == 'account' ? 'ks_row_account' : 'ks_row_report'}} {{['Net Profit', 'EQUITY + LIABILITIES', 'Cash and cash equivalents, closing balance'].includes(current_line['ks_name']) ? 'ks_row_grand' : ''}}"
+            t-att-data-bs-target="'.ks_level_' + (current_line['self_id'])" data-bs-toggle="collapse" aria-expanded="false">
+
+            <t t-if="current_line['account']">
+                <div class="custom-body-cell">
+                    <div class="dropdown custom-dd">
+                        <button class="btn custom-btn" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                            <img src="/accounting_dynamic_reports_community/static/src/img/Vector.svg" alt="dropdown" loading="lazy"/>
+                        </button>
+                        <ul class="dropdown-menu custom-dd" role="menu">
+                            <li role="presentation">
+                                <a role="menuitem" class="ks_view-source dropdown-item" tabindex="-1"
+                                   action="ks_show_df_journal_items"
+                                   t-on-click="event => props.ksgetaction(event, props.ks_df_report_opt)"
+                                   t-att-data-bs-account-id="current_line['account']">
+                                    Journal Items
+                                </a>
+                            </li>
+                            <li role="presentation">
+                                <a role="menuitem" class="ks_view-source dropdown-item" tabindex="1"
+                                   action="ks_show_df_general_ledger"
+                                   t-on-click="event => props.ksgetaction(event, props.ks_df_report_opt)"
+                                   t-att-data-bs-account-id="current_line['account']">
+                                    General Ledger
+                                </a>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </t>
+            <t t-else="">
+                <div class="custom-body-cell"></div>
+            </t>
+
+            <div class="custom-body-cell">
+                <div t-att-style="'padding-left: ' + (current_line['ks_level'] * 24) + 'px;'" t-esc="current_line['ks_name']"/>
+            </div>
+
+            <t t-if="ks_df_report_opt['ks_diff_filter']['ks_debit_credit_visibility']">
+                <div class="custom-body-cell">
+                    <t t-if="current_line['debit']">
+                         <span t-att-class="ksCls(current_line['debit'])" t-esc="ksFmt(current_line['debit'], current_line['symbol'], current_line['position'])"/>
+                    </t>
+                    <t t-else="">
+                        <span class="ks-amt ks-zero">-</span>
+                    </t>
+                </div>
+                <div class="custom-body-cell">
+                    <t t-if="current_line['credit']">
+                        <span t-att-class="ksCls(current_line['credit'])" t-esc="ksFmt(current_line['credit'], current_line['symbol'], current_line['position'])"/>
+                    </t>
+                    <t t-else="">
+                        <span class="ks-amt ks-zero">-</span>
+                    </t>
+                </div>
+            </t>
+
+            <t t-if="ks_df_report_opt['ks_diff_filter']['ks_diff_filter_enablity']">
+                <t t-foreach="Object.values(current_line.balance_cmp)" t-as="current_interval" t-key="current_interval_index">
+                    <div class="custom-body-cell">
+                        <span t-att-class="ksCls(current_interval)" t-esc="ksFmt(current_interval, current_line['symbol'], current_line['position'])"/>
+                    </div>
+                </t>
+            </t>
+            <div class="custom-body-cell">
+                <t t-if="current_line['balance']">
+                    <span t-att-class="ksCls(current_line['balance'])" t-esc="ksFmt(current_line['balance'], current_line['symbol'], current_line['position'])"/>
+                </t>
+                <t t-else="">
+                    <span class="ks-amt ks-zero">-</span>
+                </t>
+            </div>
+             <t t-if="props.ks_df_report_opt['ks_differ']['ks_intervals'].length == 1">
+                <div class="custom-body-cell"></div>
+            </t>
+            <t t-if="has_children">
+                 <div class="toggle-arrow custom-body-cell"></div>
+            </t>
+             <t t-else="">
+                 <div class="custom-body-cell"></div>
+             </t>
+        </div>
+
+        <t t-if="current_line.children &amp;&amp; current_line.children.length > 0">
+            <t t-foreach="current_line.children" t-as="subCategory" t-key="subCategory_index">
+                <div class="collapse child-tr" t-att-class="'ks_level_' + current_line['self_id'].toString()">
+                    <t t-call="ks_df_sub_lines">
+                        <t t-set="current_line" t-value="subCategory"/>
+                    </t>
+                </div>
+            </t>
+        </t>
+    </t>
+</templates>

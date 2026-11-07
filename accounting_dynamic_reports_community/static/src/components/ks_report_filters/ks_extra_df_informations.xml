@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+    <t t-name="ks_searchview_extra_ks_df_informations" owl="1">
+        <t t-set="ksInfo" t-value="props.ks_df_informations"/>
+        <t t-set="ksName" t-value="props.new_ks_df_reports_ids"/>
+        <Dropdown togglerClass="'btn btn-secondary ks_filter_btn'" showCaret="true">
+            <t t-set-slot="toggler">
+                <i class="fa fa-filter me-1"/>Options:
+                <t t-if="ksInfo.ks_posted_entries and !ksInfo.ks_unposted_entries">Posted</t>
+                <t t-elif="ksInfo.ks_unposted_entries and !ksInfo.ks_posted_entries">Draft</t>
+                <t t-else="">Posted &amp; Draft</t>
+            </t>
+            <DropdownItem class="{'selected': ksInfo.ks_posted_entries}" parentClosingMode="'none'"
+                          onSelected="() => this.OnClickDate('ks_posted_entries')">Posted Entries</DropdownItem>
+            <DropdownItem class="{'selected': ksInfo.ks_unposted_entries}" parentClosingMode="'none'"
+                          onSelected="() => this.OnClickDate('ks_unposted_entries')">Draft Entries</DropdownItem>
+            <t t-if="ksName == 'Partner Ledger'">
+                <div role="separator" class="dropdown-divider"/>
+                <DropdownItem class="{'selected': ksInfo.ks_reconciled}" parentClosingMode="'none'"
+                              onSelected="() => this.OnClickDate('ks_reconciled')">Reconciled Entries</DropdownItem>
+                <DropdownItem class="{'selected': ksInfo.ks_unreconciled}" parentClosingMode="'none'"
+                              onSelected="() => this.OnClickDate('ks_unreconciled')">Unreconciled Entries</DropdownItem>
+            </t>
+            <div role="separator" class="dropdown-divider"/>
+            <DropdownItem t-if="!['Age Receivable', 'Age Payable'].includes(ksName)"
+                          class="{'selected': ksInfo.ks_comparison_range}"
+                          onSelected="() => this.OnClickDate('ks_comparison_range')">Use a date range</DropdownItem>
+            <DropdownItem t-if="!['Balance Sheet', 'Profit and Loss', 'Cash Flow Statement', 'Executive Summary', 'Tax Report', 'Trial Balance'].includes(ksName)"
+                          class="{'selected': ksInfo.ks_report_with_lines}" parentClosingMode="'none'"
+                          onSelected="() => this.OnClickDate('ks_report_with_lines')">Print with details</DropdownItem>
+        </Dropdown>
+    </t>
+</templates>

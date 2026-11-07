@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+    <t t-name="ks_searchview_extra_ks_account_information" owl="1">
+        <Dropdown togglerClass="'btn btn-secondary ks_filter_btn'" showCaret="true" menuClass="'ks_scroll_menu'">
+            <t t-set-slot="toggler">
+                <i class="fa fa-list-ol me-1"/>Accounts:
+                <t t-set="selected_account" t-value="props.ks_df_informations['account'].filter(a => a.selected and a.code).map(a => a.code).join(', ')"/>
+                <t t-esc="selected_account or 'All'"/>
+            </t>
+            <div class="px-2 pb-1">
+                <input type="text" placeholder="Search account..." class="form-control form-control-sm ks_input"
+                       t-on-keyup="onKsSearchFilter"/>
+            </div>
+            <t t-foreach="props.ks_df_informations['account']" t-as="a" t-key="a_index">
+                <t t-if="a.id == 'divider'">
+                    <h6 class="dropdown-header" t-esc="a.name"/>
+                </t>
+                <DropdownItem t-elif="a.id != 'group'" class="{'selected': a.selected, 'js_account_report_choice_filter': true}"
+                              dataset="{ id: a.id }" parentClosingMode="'none'"
+                              onSelected="() => this.js_account_report_choice_filter(a.id, 'account')">
+                    <span class="text-muted me-1" t-esc="a.code"/><t t-esc="a.name"/>
+                </DropdownItem>
+            </t>
+        </Dropdown>
+    </t>
+</templates>

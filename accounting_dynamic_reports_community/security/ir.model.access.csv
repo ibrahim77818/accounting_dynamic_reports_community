@@ -1,0 +1,10 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_ks_dfr_base_readonly,ks.dynamic.financial.base readonly,model_ks_dynamic_financial_base,account.group_account_readonly,1,1,0,0
+access_ks_dfr_base_invoice,ks.dynamic.financial.base billing,model_ks_dynamic_financial_base,account.group_account_invoice,1,1,0,0
+access_ks_dfr_base_manager,ks.dynamic.financial.base manager,model_ks_dynamic_financial_base,account.group_account_manager,1,1,1,1
+access_ks_dfr_reports_readonly,ks.dynamic.financial.reports readonly,model_ks_dynamic_financial_reports,account.group_account_readonly,1,1,0,0
+access_ks_dfr_reports_invoice,ks.dynamic.financial.reports billing,model_ks_dynamic_financial_reports,account.group_account_invoice,1,1,0,0
+access_ks_dfr_reports_manager,ks.dynamic.financial.reports manager,model_ks_dynamic_financial_reports,account.group_account_manager,1,1,1,1
+access_ks_dfr_account_type_readonly,ks.dynamic.financial.reports.account readonly,model_ks_dynamic_financial_reports_account,account.group_account_readonly,1,0,0,0
+access_ks_dfr_account_type_invoice,ks.dynamic.financial.reports.account billing,model_ks_dynamic_financial_reports_account,account.group_account_invoice,1,0,0,0
+access_ks_dfr_account_type_manager,ks.dynamic.financial.reports.account manager,model_ks_dynamic_financial_reports_account,account.group_account_manager,1,1,1,1

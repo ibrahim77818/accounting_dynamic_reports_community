@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<templates>
+    <t t-name="ks_tax_report_lines" owl="1">
+        <!--  control panel  -->
+
+        <KsControlPanel action="props.action" ks_df_report_opt="ks_df_report_opt" ks_df_informations="props.ks_master_value.ks_df_informations"
+                        new_ks_df_reports_ids="props.ks_master_value.new_ks_df_reports_ids" ks_df_context="ks_df_context" _ksRenderBody.bind="_ksRenderBody"
+                        setReportValues.bind="setReportValues" ks_master_value="props.ks_master_value"
+                        ksSetReportInfo.bind="ksSetReportInfo" date_from_cmp="props.date_from_cmp"
+                        date_to_cmp="props.date_to_cmp"/>
+
+        <!--  dynamic rendering of reports  -->
+        <t t-component="myComponent" t-props="getProps()"/>
+
+    </t>
+
+</templates>

@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+    <t t-name="ks_searchview_analytic_filter" owl="1">
+        <Dropdown togglerClass="'btn btn-secondary ks_filter_btn'" showCaret="true">
+            <t t-set-slot="toggler">
+                <i class="fa fa-folder-open me-1"/>Analytic:
+                <t t-esc="(props.ks_df_informations['selected_analytic_account_names'] || []).join(', ') || 'All'"/>
+            </t>
+            <div class="px-3 py-2 ks_selector_box">
+                <KsRecordSelector t-props="getMultiRecordSelectoraccount('account.analytic.account', 'analytic_accounts')"/>
+            </div>
+        </Dropdown>
+    </t>
+</templates>

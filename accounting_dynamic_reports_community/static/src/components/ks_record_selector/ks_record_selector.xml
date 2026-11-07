@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+    <t t-name="accounting_dynamic_reports_community.KsRecordSelector" owl="1">
+        <div class="ks_record_selector">
+            <div class="d-flex flex-wrap gap-1 mb-1" t-if="state.records.length">
+                <t t-foreach="state.records" t-as="rec" t-key="rec.id">
+                    <span class="badge rounded-pill ks_tag">
+                        <t t-esc="rec.name"/>
+                        <i class="fa fa-times ms-1" role="button" title="Remove" t-on-click.stop="() => this.remove(rec.id)"/>
+                    </span>
+                </t>
+            </div>
+            <AutoComplete value="''" sources="sources" onSelect.bind="onSelect"
+                          placeholder="props.placeholder || 'Search...'" autoSelect="true" resetOnSelect="true"/>
+        </div>
+    </t>
+</templates>

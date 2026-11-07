@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+    <t t-name="ks_searchview_journals_filter" owl="1">
+        <Dropdown togglerClass="'btn btn-secondary ks_filter_btn'" showCaret="true">
+            <t t-set-slot="toggler">
+                <i class="fa fa-book me-1"/>Journals:
+                <t t-set="selected_journals"
+                   t-value="props.ks_df_informations['journals'].filter(j => j.selected and j.code).map(j => j.code).join(', ')"/>
+                <t t-esc="selected_journals or 'All'"/>
+            </t>
+            <t t-foreach="props.ks_df_informations['journals']" t-as="j" t-key="j_index">
+                <t t-if="j.id == 'divider'">
+                    <div role="separator" class="dropdown-divider"/>
+                    <h6 class="dropdown-header" t-esc="j.name"/>
+                </t>
+                <DropdownItem t-elif="j.id == 'group'" class="{'selected': j.selected}"
+                              parentClosingMode="'none'"
+                              onSelected="() => this.js_account_report_group_choice_filter('journals', j.ids)">
+                    <t t-esc="j.name"/>
+                </DropdownItem>
+                <DropdownItem t-else="" class="{'selected': j.selected}" parentClosingMode="'none'"
+                              dataset="{ id: j.id }"
+                              onSelected="() => this.js_account_report_choice_filter(j.id, 'journals')">
+                    <span class="text-muted me-1" t-esc="j.code"/><t t-esc="j.name"/>
+                </DropdownItem>
+            </t>
+        </Dropdown>
+    </t>
+</templates>
